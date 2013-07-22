@@ -1,0 +1,26 @@
+<h3>ng-hljs</h3>
+<blockquote>
+  Blah
+</blockquote>
+<hr>
+
+<ng-hljs>
+<!-- setup selection display/input input:text -->
+<p class="lead">
+  selection: <input type="text" ng-model="selection">
+</p>
+
+<!-- bind scope.selection to ngSelect model -->
+<div class="row example" ng-select="selection">
+  <div class="span12">
+    
+    <!-- five images with number as option value -->
+    <!-- add "selected" class on option selected -->
+    <img class="img-polaroid img-circle" 
+         ng-repeat="num in [1, 2, 3, 4, 5] track by $id($index)" 
+         ng-src="http://lorempixel.com/100/100/sports/{{ num }}"
+         ng-select-option="{{ num }}" 
+         select-class="{'selected': $optSelected}">
+  </div>
+</div>
+</ng-hljs>
