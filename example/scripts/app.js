@@ -1,10 +1,13 @@
-angular.module('exampleApp', ['ngHljs'], 
-        ['$routeProvider', 
-function ($routeProvider) {
+angular.module('exampleApp', ['hljs'])
 
-  angular.forEach([
-    '/ng-hljs', '/ng-hljs-source', '/ng-hljs-fetch'
-  ], function (path) {
+.constant('exampleRoutes', [
+  '/hljs', '/hljs-source', '/hljs-include'
+])
+
+.config(['$routeProvider', 'exampleRoutes',
+function ($routeProvider,   exampleRoutes) {
+
+  angular.forEach(exampleRoutes, function (path) {
     $routeProvider.when(path, {
       templateUrl: 'partials' + path + '.html'
     });
@@ -12,6 +15,6 @@ function ($routeProvider) {
 
   $routeProvider
   .otherwise({
-    redirectTo: '/ng-hljs'
+    redirectTo: exampleRoutes[0]
   });
 }]);

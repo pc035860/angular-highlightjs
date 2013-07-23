@@ -1,0 +1,21 @@
+<h3>hljs + source</h3>
+<blockquote>
+  <code>source</code> directive connects the highlight content with <code>hljs</code>.
+</blockquote>
+<hr>
+
+<p>Click on the button will drop the page source into <code>$scope.subSource</code>, and triggers <code>hljs</code> directive to display the highlighted <code>$scope.subSource</code>.</p>
+
+<!-- buttons for put/clear $scope.subSource content -->
+<button class="btn btn-primary show-source" ng-click="toggleSource('subSource')" ng-show="!subSource">put $scope.subSource</button>
+<button class="btn btn-primary show-source" ng-click="toggleSource('subSource')" ng-show="subSource">clear $scope.subSource</button>
+<div ng-show="subSource">
+  <br>
+  <!-- hljs connected with $scope.subSource -->
+  <div hljs source="subSource"></div>
+</div>
+
+<hr>
+<p>Demostrates the <code>source</code> expression evaluation.</p>
+<!-- hljs connected with independent string -->
+<div hljs source="'<html><head><body></body></head></html>'"></div>

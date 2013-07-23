@@ -18,6 +18,7 @@
   <script src="scripts/controllers.js"></script>
 </head>
 <body ng-controller="ExampleCtrl">
+  <div class="source-overlay" ng-show="source"></div>
   <div class="container">
     <div class="navbar">
       <div class="navbar-inner">
@@ -32,9 +33,9 @@
       </div>
     </div>
     <div class="container source-stage" ng-show="source">
-      <ng-hljs source="source"></ng-hljs>
+      <div hljs source="source"></div>
     </div>
-    <div ng-view ng-animate="{enter: 'animated fadeInDown'}"></div>
+    <div ng-view></div>
   </div>
 
 </body>

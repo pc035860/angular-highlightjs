@@ -21,6 +21,18 @@ pre {
 	}
 }
 
+.source-overlay {
+	position: fixed;
+	z-index: 1;
+
+	width: 100%;
+
+	left: 0; top: 0;
+	right: 0; bottom: 0;
+
+	background-color: rgba(0, 0, 0, 0.3);
+}
+
 .source-stage {
 	position: absolute;
 	z-index: 10;
@@ -28,13 +40,17 @@ pre {
 	top: 50px;
 }
 
-.navbar-inner {
+.navbar {
 	position: relative;
+	z-index: 2;
+	.navbar-inner {
+		position: relative;
 
-	.show-source {
-		position: absolute;
+		.show-source {
+			position: absolute;
 
-		right: 10px;
+			right: 10px;
+		}
 	}
 }
 

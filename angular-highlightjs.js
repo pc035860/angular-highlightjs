@@ -1,8 +1,8 @@
-angular.module('ngHljs', [])
+angular.module('hljs', [])
 
-.controller('NgHljsCtrl', [
+.controller('HljsCtrl', [
          '$timeout',
-function NgHljsCtrl($timeout) {
+function HljsCtrl($timeout) {
   var ctrl = this;
 
   var _elm = null;
@@ -34,10 +34,10 @@ function NgHljsCtrl($timeout) {
   };
 }])
 
-.directive('ngHljs', [function () {
+.directive('hljs', [function () {
   return {
     restrict: 'EA',
-    controller: 'NgHljsCtrl',
+    controller: 'HljsCtrl',
     compile: function(tElm, tAttrs, transclude) {
       // get static code
       // strip the starting "new line" character
@@ -63,12 +63,12 @@ function NgHljsCtrl($timeout) {
 
 .directive('source', [function () {
   return {
-    require: 'ngHljs',
+    require: 'hljs',
     restrict: 'A',
     link: function(scope, iElm, iAttrs, ctrl) {
 
       scope.$watch(iAttrs.source, function (newCode, oldCode) {
-        if (newCode && newCode !== oldCode) {
+        if (newCode) {
           ctrl.highlight(newCode);
         }
         else {
@@ -79,14 +79,14 @@ function NgHljsCtrl($timeout) {
   };
 }])
 
-.directive('fetch', [
+.directive('include', [
          '$http', '$templateCache', '$q',
 function ($http,   $templateCache,   $q) {
   return {
-    require: 'ngHljs',
+    require: 'hljs',
     restrict: 'A',
     compile: function(tElm, tAttrs, transclude) {
-      var srcExpr = tAttrs.fetch;
+      var srcExpr = tAttrs.include;
 
       return function postLink(scope, iElm, iAttrs, ctrl) {
         var changeCounter = 0;
