@@ -1,8 +1,6 @@
 angular.module('hljs', [])
 
-.controller('HljsCtrl', [
-         '$timeout',
-function HljsCtrl($timeout) {
+.controller('HljsCtrl', [function HljsCtrl () {
   var ctrl = this;
 
   var _elm = null,
@@ -39,9 +37,7 @@ function HljsCtrl($timeout) {
       res = hljs.highlightAuto(_code);
     }
 
-    $timeout(function () {
-      _elm.html(res.value);
-    });
+    _elm.html(res.value);
   };
 
   ctrl.clear = function () {
@@ -160,7 +156,12 @@ function ($http,   $templateCache,   $q) {
 
               // $templateCache from $http
               if (angular.isArray(code)) {
+                // 1.1.5
                 code = code[1];
+              }
+              else if (angular.isObject(code)) {
+                // 1.0.7
+                code = code.data;
               }
 
               code = code.replace(/^\r\n|\r|\n/, '');
