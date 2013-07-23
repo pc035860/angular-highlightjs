@@ -5,20 +5,42 @@ angular.module('hljs', [])
 function HljsCtrl($timeout) {
   var ctrl = this;
 
-  var _elm = null;
+  var _elm = null,
+      _lang = null,
+      _code = null;
 
   ctrl.init = function (codeElm) {
     _elm = codeElm;
+  };
+
+  ctrl.setLanguage = function (lang) {
+    _lang = lang;
+
+    if (_code) {
+      ctrl.highlight(_code);
+    }
   };
 
   ctrl.highlight = function (code) {
     if (!_elm) {
       return;
     }
-    _elm.text(code);
+
+    var res;
+
+    _code = code;
+
+    if (_lang) {
+      // language specified
+      res = hljs.highlight(_lang, _code, true);
+    }
+    else {
+      // language auto-detect
+      res = hljs.highlightAuto(_code);
+    }
 
     $timeout(function () {
-      hljs.highlightBlock(_elm[0]);
+      _elm.html(res.value);
     });
   };
 
@@ -26,6 +48,7 @@ function HljsCtrl($timeout) {
     if (!_elm) {
       return;
     }
+    _code = null;
     _elm.text('');
   };
 
@@ -57,6 +80,21 @@ function HljsCtrl($timeout) {
           ctrl.release();
         });
       };
+    }
+  };
+}])
+
+.directive('language', [function () {
+  return {
+    require: 'hljs',
+    restrict: 'A',
+    link: function (scope, iElm, iAttrs, ctrl) {
+
+      iAttrs.$observe('language', function (lang) {
+        if (angular.isDefined(lang)) {
+          ctrl.setLanguage(lang);
+        }
+      });
     }
   };
 }])
