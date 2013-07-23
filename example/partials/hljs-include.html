@@ -5,30 +5,32 @@
 <hr>
 
 <script type="text/ng-template" id="localOne">
-<!-- setup selection display/input input:text -->
-<p class="lead">
-  selection: <input type="text" ng-model="selection">
-</p>
+@requires_authorization
+def somefunc(param1='', param2=0):
+    r'''A docstring'''
+    if param1 > param2: # interesting
+        print 'Gre\'ater'
+    return (param2 - param1 + 1) or None
 
-<!-- bind scope.selection to ngSelect model -->
-<div class="row example" ng-select="selection">
-  <div class="span12">
-    
-    <!-- five images with number as option value -->
-    <!-- add "selected" class on option selected -->
-    <img class="img-polaroid img-circle" 
-         ng-repeat="num in [1, 2, 3, 4, 5] track by $id($index)" 
-         ng-src="http://lorempixel.com/100/100/sports/{{ num }}"
-         ng-select-option="{{ num }}" 
-         select-class="{'selected': $optSelected}">
-  </div>
-</div>
+class SomeClass:
+    pass
+
+>>> message = '''interpreter
+... prompt'''
 </script>
 
-<p>Load from <code>text/ng-template</code> script tag.</p>
+<p>
+  Load from <code>text/ng-template</code> script tag.
+  <br><br>
+  <small>Python</small>
+</p>
 <!-- load text/ng-template named 'localOne' -->
 <hljs include="'localOne'"></hljs>
 <hr>
-<p>Load <code>partials/hljs.html</code> with XHR request.</p>
-<!-- load "partials/hljs.html" -->
-<hljs include="'partials/hljs.html'"></hljs>
+<p>
+  Load <code>partials/lang-perl</code> with XHR request.
+  <br><br>
+  <small>Perl</small>
+</p>
+<!-- load "partials/lang-perl" -->
+<hljs include="'partials/lang-perl'"></hljs>
