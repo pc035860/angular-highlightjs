@@ -1,6 +1,6 @@
 # angular-highlightjs
 
-AngularJS directive for syntax highlighting with [highlight.js](https://github.com/isagalaev/highlight.js).
+AngularJS directive for syntax highlighting with [highlight.js](http://highlightjs.org/).
 
 #### [Demo](http://plnkr.co/edit/8Yy8L3pb8o7C2A46VK1g?p=preview)
 
@@ -12,7 +12,9 @@ AngularJS directive for syntax highlighting with [highlight.js](https://github.c
 
 ## Getting started
 
-Follow the instructions [here](http://softwaremaniacs.org/soft/highlight/en/download/) to setup the highlight.js.
+Follow the instructions [here](http://softwaremaniacs.org/soft/highlight/en/download/) to setup highlight.js.
+
+Using a prebuilt version of highlight.js hosted at Yandex here.
 ```html
 <!-- personal preference: github theme -->
 <link rel="stylesheet" href="http://yandex.st/highlightjs/7.3/styles/github.min.css">
