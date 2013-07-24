@@ -79,7 +79,7 @@ The expression. Beware of single-quotes.
 Type: `expression`
 Default: `undefined`
 
-Works as the built-in `ng-include` directive, utilizes `$templateCache` and `$http` to retrieve content from `text/ng-template` scripts or from XHR request.
+Works as the built-in `ng-include` directive, utilizes `$templateCache` and `$http` to retrieve content from `text/ng-template` scripts or from XHR.
 
 [Live example](http://pc035860.github.io/angular-highlightjs/example/#/hljs-include)
 
@@ -89,7 +89,7 @@ From `text/ng-template` script `localOne`. Beware of single-quotes in the expres
 <div hljs include="'localOne'"></div>
 ```
 
-From `partials/lang-perl` XHR request. Again, beware of single-quotes.
+From `partials/lang-perl` XHR. Again, beware of single-quotes.
 ```html
 <!-- load "partials/lang-perl" -->
 <div hljs include="'partials/lang-perl'"></div>
