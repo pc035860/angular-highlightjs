@@ -2,7 +2,7 @@
 
 AngularJS directive for syntax highlighting with [highlight.js](http://highlightjs.org/).
 
-#### [Demo](http://plnkr.co/edit/8Yy8L3pb8o7C2A46VK1g?p=preview)
+#### [Demo](http://plnkr.co/edit/OPxzDu?p=preview)
 
 ## Requirements
 
