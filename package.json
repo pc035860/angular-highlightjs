@@ -13,13 +13,12 @@
   },
   "keywords": [
     "angularjs",
-    "directive",
-    "select"
+    "highlight.js",
+    "angular-highlightjs"
   ],
   "author": "Robin Fan",
   "license": "MIT",
   "readmeFilename": "README.md",
-  "gitHead": "0fe4dacb359b60bd652b0e13eb9924332412e534",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-uglify": "~0.2.0",
