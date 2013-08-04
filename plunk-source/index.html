@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" ng-app="plunkSource">
+<head>
+  <meta charset="UTF-8">
+  <title>plunk source</title>
+
+  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="http://yandex.st/highlightjs/7.3/styles/github.min.css">
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+  <script src="../angular-highlightjs.min.js"></script>
+  <script src="http://pc035860.github.io/ngSelect/ngSelect.min.js"></script>
+
+  <script src="app.js"></script>
+</head>
+<body>
+  <div ng-view></div>
+
+  <script type="text/ng-template" id="main.html">
+  <div plunk-source="{{ plunkId }}"></div>
+  </script>
+
+  <script type="text/ng-template" id="plunk-source-template">
+  <div>
+    <h3 class="muted" ng-show="files.length == 0">
+      loading&hellip;
+    </h3>
+    <div ng-show="files.length > 0">
+      <ul class="nav nav-tabs" 
+          ng-select="currentFilename"
+          select-class="{'active': $optSelected}">
+      
+        <li ng-repeat="file in files" 
+            ng-select-option="{{ file.name }}">
+      
+          <a href="">{{ file.name }}</a>
+        </li>
+      </ul>
+      <div class="tab-container">
+        <div ng-repeat="file in files">
+          <div ng-if="file.name == currentFilename" hljs source="fileIndex[currentFilename].content"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </script>
+</body>
+</html>
