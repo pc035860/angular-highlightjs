@@ -58,9 +58,9 @@ If `source` is presented, the `hljs` directive will evaluate the expression and 
 Dynamically changed content.
 ```html
 <!-- buttons for put/clear $scope.subSource content -->
-<button class="btn btn-primary show-source" 
+<button class="btn btn-primary show-source"
         ng-click="toggleSource('subSource')" ng-show="!subSource">put $scope.subSource</button>
-<button class="btn btn-primary show-source" 
+<button class="btn btn-primary show-source"
         ng-click="toggleSource('subSource')" ng-show="subSource">clear $scope.subSource</button>
 <div ng-show="subSource">
   <br>
@@ -93,6 +93,18 @@ From `partials/lang-perl` XHR. Again, beware of single-quotes.
 ```html
 <!-- load "partials/lang-perl" -->
 <div hljs include="'partials/lang-perl'"></div>
+```
+#### obj (optional)
+Type: `object`
+Default: `undefined`
+
+Tells the highlight.js to highlight the given object.
+
+
+```html
+<!-- obj here is a simple javascript object -->
+<div hljs obj="obj"></div>
+
 ```
 
 #### language (optional)

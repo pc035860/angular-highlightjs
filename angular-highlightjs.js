@@ -113,6 +113,19 @@ angular.module('hljs', [])
   };
 }])
 
+.directive('obj', [function () {
+  return {
+    require: 'hljs',
+    restrict: 'A',
+    link: function(scope, iElm, iAttrs, ctrl) {
+      var tmpObj = scope[iAttrs.obj];
+
+      var tmpStr = JSON.stringify(tmpObj, null, 4);
+      ctrl.highlight(tmpStr);
+    }
+  };
+}])
+
 .directive('include', [
          '$http', '$templateCache', '$q',
 function ($http,   $templateCache,   $q) {
@@ -147,7 +160,7 @@ function ($http,   $templateCache,   $q) {
               });
               templateCachePromise = dfd.promise;
             }
-            
+
             $q.when(templateCachePromise)
             .then(function (code) {
               if (!code) {
