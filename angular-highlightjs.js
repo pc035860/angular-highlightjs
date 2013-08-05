@@ -118,10 +118,24 @@ angular.module('hljs', [])
     require: 'hljs',
     restrict: 'A',
     link: function(scope, iElm, iAttrs, ctrl) {
-      var tmpObj = scope[iAttrs.obj];
+      var objName = iAttrs.obj;
+      var tmpObj = angular.copy(scope[objName]);
 
       var tmpStr = JSON.stringify(tmpObj, null, 4);
       ctrl.highlight(tmpStr);
+
+      scope.$watch(objName, function (newCode, oldCode) {
+        $timeout(function() {
+          if (newCode) {
+            var tmpObj = angular.copy(newCode);
+            var tmpStr = JSON.stringify(tmpObj, null, 4);
+            ctrl.highlight(tmpStr);
+          }
+          else {
+            ctrl.clear();
+          }
+        }, 0);
+      }, true);
     }
   };
 }])
