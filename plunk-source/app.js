@@ -1,17 +1,29 @@
-var app = angular.module('plunkSource', ['ngSelect', 'hljs']);
+angular.module('plunkSource', ['ngSelect', 'hljs'])
 
-app.config(function ($routeProvider) {
+.constant('psConst', {
+  AVAILABLE_THEMES: [
+    'arta', 'ascetic', 'brown_paper', 'dark', 'default',
+    'docco', 'far', 'foundation', 'github', 'googlecode', 'idea', 
+    'ir_black', 'magula', 'mono-blue', 'monokai', 'monokai_sublime',
+    'obsidian', 'pojoaque', 'railscasts', 'rainbow', 'school_book',
+    'solarized_dark', 'solarized_light', 'sunburst', 'tomorrow-night-blue',
+    'tomorrow-night-bright', 'tomorrow-night-eighties', 'tomorrow-night',
+    'tomorrow', 'vs', 'xcode', 'zenburn'
+  ]
+})
+
+.config(function ($routeProvider) {
   $routeProvider
-  .when('/:plunkId', {
+  .when('/:plunkId*options', {
     templateUrl: 'main.html',
     controller: 'PlunkCtrl'
   })
   .otherwise({
     redirectTo: '/OPxzDu'
   });
-});
+})
 
-app.factory('plunkData', function($http) {
+.factory('plunkData', function($http) {
   return function (plunkId) {
     var api = "http://api.plnkr.co/plunks/";
     return $http.get(api + plunkId)
@@ -19,9 +31,9 @@ app.factory('plunkData', function($http) {
         return res.data;
       });
   };
-});
+})
 
-app.directive('plunkSource', function (plunkData) {
+.directive('plunkSource', function (plunkData) {
   return {
     restrict: 'EA',
     scope: {
@@ -57,10 +69,19 @@ app.directive('plunkSource', function (plunkData) {
       });
     }
   };
-});
+})
 
-app.controller('PlunkCtrl', function($scope, $routeParams) {
+.controller('PlunkCtrl', function($scope, $routeParams, psConst) {
 
   $scope.plunkId = $routeParams.plunkId;
+
+  $scope.containerTheme = 'light';
+
+  $scope.highlightTheme = 'default';
+  angular.forEach($routeParams.options.split(/\//), function (v) {
+    if (v != '' && psConst.AVAILABLE_THEMES.indexOf(v) >= 0) {
+      $scope.highlightTheme = v;
+    }
+  });
 
 });
