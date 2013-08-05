@@ -113,6 +113,33 @@ angular.module('hljs', [])
   };
 }])
 
+.directive('obj', [function () {
+  return {
+    require: 'hljs',
+    restrict: 'A',
+    link: function(scope, iElm, iAttrs, ctrl) {
+      var objName = iAttrs.obj;
+      var tmpObj = angular.copy(scope[objName]);
+
+      var tmpStr = JSON.stringify(tmpObj, null, 4);
+      ctrl.highlight(tmpStr);
+
+      scope.$watch(objName, function (newCode, oldCode) {
+        $timeout(function() {
+          if (newCode) {
+            var tmpObj = angular.copy(newCode);
+            var tmpStr = JSON.stringify(tmpObj, null, 4);
+            ctrl.highlight(tmpStr);
+          }
+          else {
+            ctrl.clear();
+          }
+        }, 0);
+      }, true);
+    }
+  };
+}])
+
 .directive('include', [
          '$http', '$templateCache', '$q',
 function ($http,   $templateCache,   $q) {
@@ -147,7 +174,7 @@ function ($http,   $templateCache,   $q) {
               });
               templateCachePromise = dfd.promise;
             }
-            
+
             $q.when(templateCachePromise)
             .then(function (code) {
               if (!code) {
