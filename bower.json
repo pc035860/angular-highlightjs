@@ -14,7 +14,5 @@
     "tests"
   ],
   "dependencies": {
-    "highlightjs": "~7.3.0",
-    "angular" : "PatternConsulting/bower-angular#1.1.x"
   }
 }
