@@ -32,6 +32,23 @@ Add `hljs` to your app module's dependency.
 angular.module('myApp', ['hljs']);
 ```
 
+## Install with Bower
+
+The official bower package of AngularJS hasn't support unstable branch, hence for the current version of `angular-highlightjs` package, no dependency is specified.
+
+```sh
+# install AngularJS (stable)
+bower install angular
+# or (unstable)
+bower install PatternConsulting/bower-angular
+
+# install highlight.js
+bower install highlightjs
+
+# install angular-highlightjs
+bower install angular-highlightjs
+```
+
 ## Usage
 
 ### hljs
