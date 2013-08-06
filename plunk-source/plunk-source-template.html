@@ -1,0 +1,22 @@
+<div>
+  <h3 class="muted" ng-show="files.length == 0">
+    loading&hellip;
+  </h3>
+  <div ng-show="files.length > 0">
+    <ul class="nav nav-tabs" 
+        ng-select="currentFilename"
+        select-class="{'active': $optSelected}">
+    
+      <li ng-repeat="file in files" 
+          ng-select-option="{{ file.name }}">
+    
+        <a href="">{{ file.name }}</a>
+      </li>
+    </ul>
+    <div class="tab-container">
+      <div ng-repeat="file in files">
+        <div ng-if="file.name == currentFilename" hljs source="fileIndex[currentFilename].content"></div>
+      </div>
+    </div>
+  </div>
+</div>

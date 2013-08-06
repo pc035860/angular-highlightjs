@@ -39,7 +39,7 @@ angular.module('plunkSource', ['ngSelect', 'hljs'])
     scope: {
       plunkId: "@plunkSource"
     },
-    templateUrl: 'plunk-source-template',
+    templateUrl: 'plunk-source-template.html',
     link: function(scope, iElm, iAttrs) {
       scope.fileIndex = null;
       scope.currentFilename = null;
