@@ -1,0 +1,46 @@
+body {
+    padding: 0 !important;
+    background-color: #2f2f2f;
+}
+
+.tab-container pre {
+    padding: 0;
+    border: none;
+    margin-bottom: 0;
+}
+
+.nav {
+    background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #4d4d4d), color-stop(100%, #2f2f2f));
+    background: -webkit-linear-gradient(#4d4d4d,#2f2f2f);
+    background: -moz-linear-gradient(#4d4d4d,#2f2f2f);
+    background: -o-linear-gradient(#4d4d4d,#2f2f2f);
+    background: linear-gradient(#4d4d4d,#2f2f2f);
+}
+
+.nav-tabs {
+    border-bottom: 2px solid rgb(153, 153, 153);
+}
+.nav-tabs>li {
+    margin-bottom: -2px;
+    border-bottom: 2px solid rgb(153, 153, 153);
+}
+.nav-tabs>li>a {
+    color: #76daff;
+    border: none;
+}
+.nav-tabs>li>a:hover, .nav-tabs>li>a:focus {
+    color: white;
+    background-color: transparent;  
+}
+
+.nav-tabs>li.active {
+    border-color: white;
+    box-shadow: inset 5px 0px 8px -5px rgba(0, 0, 0, 0.5), inset -5px 0px 8px -5px rgba(0, 0, 0, 0.5)
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover,
+.nav-tabs>li.active>a:focus {
+    color: white;
+    border: none;
+    background-color: transparent;
+}
