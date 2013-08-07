@@ -99,8 +99,7 @@ angular.module('plunkSource', ['ngSelect', 'hljs'])
 
   $scope.plunkId = $routeParams.plunkId;
 
-  $scope.containerTheme = 'dark';
-
+  $scope.containerTheme = 'light';
   $scope.highlightTheme = 'default';
   angular.forEach($routeParams.options.split(/\//), function (v) {
     if (v != '' && v in psConst.THEME_MAP) {
