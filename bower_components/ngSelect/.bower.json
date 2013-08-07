@@ -1,0 +1,27 @@
+{
+  "name": "ngSelect",
+  "description": "An AngularJS module that transforms any HTML element on the page to selectable components.",
+  "main": "ngSelect.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "example",
+    "Gruntfile.js",
+    "package.json",
+    "test",
+    "tests"
+  ],
+  "dependencies": {},
+  "homepage": "https://github.com/pc035860/ngSelect",
+  "version": "0.1.0",
+  "_release": "0.1.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.1.0",
+    "commit": "d39bc63f1af0165490ed58f63d582a7962ee5148"
+  },
+  "_source": "git://github.com/pc035860/ngSelect.git",
+  "_target": "~0.1.0",
+  "_direct": true
+}

@@ -1,0 +1,17 @@
+{
+  "name": "ngSelect",
+  "description": "An AngularJS module that transforms any HTML element on the page to selectable components.",
+  "main": "ngSelect.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "example",
+    "Gruntfile.js",
+    "package.json",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+  }
+}
