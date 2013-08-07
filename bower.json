@@ -15,5 +15,9 @@
   ],
   "dependencies": {
     "highlightjs": "~7.3.0"
+  },
+  "devDependencies": {
+    "angular": "PatternConsulting/bower-angular#~1.1.5",
+    "highlightjs": "~7.3.0"
   }
 }
