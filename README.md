@@ -34,7 +34,7 @@ angular.module('myApp', ['hljs']);
 
 ## Install with Bower
 
-The official bower package of AngularJS hasn't support unstable branch, hence for the current version of `angular-highlightjs` package, no dependency is specified.
+Note that the `angular-highlightjs` bower package contains no AngularJS dependency.
 
 ```sh
 # install AngularJS (stable)
