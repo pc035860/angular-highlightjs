@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" ng-app="plunkSource">
+<head>
+  <meta charset="UTF-8">
+  <title>plunk source</title>
+
+  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+
+  <script src="../bower_components/highlightjs/highlight.pack.js"></script>
+
+  <script src="../bower_components/angular/angular.min.js"></script>
+  <script src="../angular-highlightjs.min.js"></script>
+  <script src="http://pc035860.github.io/ngSelect/ngSelect.min.js"></script>
+
+  <script src="app.js"></script>
+</head>
+<body>
+  <div ng-view></div>
+
+  <script type="text/ng-template" id="main.html">
+  <link rel="stylesheet" ng-href="../bower_components/highlightjs/styles/{{ highlightTheme }}.css">
+  <link rel="stylesheet" type="text/css" ng-href="styles/{{ containerTheme }}.css" />
+  <div plunk-source="{{ plunkId }}"></div>
+  </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+body {
+	padding: 0 !important;
+}
+
+.tab-container pre {
+	padding: 0;
+	border: none;
+	margin-bottom: 0;
+}
+
+.tab-container pre code {
+    /*background: none;*/
+    /*background-color: transparent;*/
+}

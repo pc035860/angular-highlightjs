@@ -1,0 +1,34 @@
+<h3>hljs + include</h3>
+<blockquote>
+  <code>include</code> directive loads <code>text/ng-template</code> or XHR partial content in. The expression works as bulit-in <code>ng-include</code>.
+</blockquote>
+<hr>
+
+<script type="text/ng-template" id="localOne">
+@requires_authorization
+def somefunc(param1='', param2=0):
+    r'''A docstring'''
+    if param1 > param2: # interesting
+        print 'Gre\'ater'
+    return (param2 - param1 + 1) or None
+
+class SomeClass:
+    pass
+
+>>> message = '''interpreter
+... prompt'''
+</script>
+
+<p>
+  Load from <code>text/ng-template</code> script tag.
+</p>
+<small><strong>Python</strong> (ref: <a href="http://softwaremaniacs.org/media/soft/highlight/test.html">highlight.js demo page</a>)</small>
+<!-- load text/ng-template named 'localOne' -->
+<div hljs include="'localOne'"></div>
+<hr>
+<p>
+  Load <code>partials/lang-perl</code> with XHR.
+</p>
+<small><strong>Perl</strong> (ref: <a href="http://softwaremaniacs.org/media/soft/highlight/test.html">highlight.js demo page</a>)</small>
+<!-- load "partials/lang-perl" -->
+<div hljs include="'partials/lang-perl'"></div>
