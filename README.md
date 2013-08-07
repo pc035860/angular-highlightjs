@@ -42,10 +42,7 @@ bower install angular
 # or (unstable)
 bower install PatternConsulting/bower-angular
 
-# install highlight.js
-bower install highlightjs
-
-# install angular-highlightjs
+# install angular-highlightjs & highlightjs
 bower install angular-highlightjs
 ```
 
