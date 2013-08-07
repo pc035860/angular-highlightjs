@@ -10,7 +10,57 @@ angular.module('plunkSource', ['ngSelect', 'hljs'])
   };
 })
 
-.directive('plunkSource', function (_apiPlunkData) {
+// ref: https://github.com/angular/code.angularjs.org/blob/master/1.1.5/docs/js/docs.js#L263
+.factory('_formPostData', function ($document) {
+  return function(url, fields) {
+    var form = angular.element('<form style="display: none;" method="post" action="' + url + '" target="_blank"></form>');
+    angular.forEach(fields, function(field) {
+      var name = field.name,
+          value = field.value;
+
+      var input = angular.element('<input type="hidden" name="' +  name + '">');
+      input.attr('value', value);
+      form.append(input);
+    });
+    $document.find('body').append(form);
+    form[0].submit();
+    form.remove();
+  };
+})
+
+// ref: https://github.com/angular/code.angularjs.org/blob/master/1.1.5/docs/js/docs.js#L277
+.factory('_openPlunker', function (_formPostData) {
+  return function (plunkData) {
+    var postData = [];
+
+    angular.forEach(plunkData.files, function (file) {
+      postData.push({
+        name: 'files[' + file.filename + ']',
+        value: file.content
+      });
+    });
+
+    angular.forEach(plunkData.tags, function (tag) {
+      postData.push({
+        name: 'tags[]',
+        value: tag
+      });
+    });
+
+    postData.push({
+      name: 'private',
+      value: true
+    });
+    postData.push({
+      name: 'description',
+      value: plunkData.description
+    });
+
+    _formPostData('http://plnkr.co/edit/?p=preview', postData);
+  };
+})
+
+.directive('plunkSource', function (_apiPlunkData, _openPlunker) {
   return {
     restrict: 'EA',
     scope: {
@@ -18,6 +68,8 @@ angular.module('plunkSource', ['ngSelect', 'hljs'])
     },
     templateUrl: 'plunk-source-template.html',
     link: function(scope, iElm, iAttrs) {
+      var _plunkData = null;
+
       scope.fileIndex = null;
       scope.currentFilename = null;
       scope.files = [];
@@ -40,10 +92,17 @@ angular.module('plunkSource', ['ngSelect', 'hljs'])
             });
 
             scope.currentFilename = scope.files[0].name;
+
+            // save plunk data
+            _plunkData = data;
           });
         }
 
       });
+
+      scope.editOnPlunker = function () {
+        _openPlunker(_plunkData);
+      };
     }
   };
-})
+});
