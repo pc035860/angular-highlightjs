@@ -12,17 +12,12 @@
   <script src="../angular-highlightjs.min.js"></script>
   <script src="../bower_components/ngSelect/ngSelect.min.js"></script>
 
-  <script src="plunkSource.js"></script>
+  <script src="scripts/modules/plunkSource.js"></script>
 
-  <script src="app.js"></script>
+  <script src="scripts/app.js"></script>
+  <script src="scripts/controllers.js"></script>
 </head>
 <body>
   <div ng-view></div>
-
-  <script type="text/ng-template" id="main.html">
-  <link rel="stylesheet" ng-href="../bower_components/highlightjs/styles/{{ highlightTheme }}.css">
-  <link rel="stylesheet" type="text/css" ng-href="styles/{{ containerTheme }}.css" />
-  <div plunk-source="{{ plunkId }}"></div>
-  </script>
 </body>
 </html>
