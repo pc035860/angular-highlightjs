@@ -2,8 +2,11 @@ angular.module('plunkSource', ['ngSelect', 'hljs'])
 
 .factory('_apiPlunkData', function($http) {
   return function (plunkId) {
-    var api = "http://api.plnkr.co/plunks/";
-    return $http.get(api + plunkId)
+    var api = "http://api.plnkr.co/plunks/",
+        config = {
+          cache: true
+        };
+    return $http.get(api + plunkId, config)
       .then(function (res) {
         return res.data;
       });

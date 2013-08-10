@@ -38,27 +38,46 @@ angular.module('plunkSourceApp', ['plunkSource'])
 
 .config(function ($routeProvider) {
   $routeProvider
-  .when('/:plunkId*options', {
+  .when('/plunk/:plunkId*options', {
     templateUrl: 'main.html',
     controller: 'PlunkCtrl'
   })
   .otherwise({
-    redirectTo: '/OPxzDu'
+    redirectTo: '/plunk/OPxzDu'
   });
 })
 
 .controller('PlunkCtrl', function($scope, $routeParams, psConst) {
 
   $scope.plunkId = $routeParams.plunkId;
+  $scope.options = _parseOptions($routeParams.options);
 
   $scope.containerTheme = 'light';
   $scope.highlightTheme = 'default';
-  angular.forEach($routeParams.options.split(/\//), function (v) {
-    if (v != '' && v in psConst.THEME_MAP) {
-      $scope.highlightTheme = v;
+  if ($scope.options.theme in psConst.THEME_MAP) {
+    $scope.highlightTheme = $scope.options.theme;
 
-      $scope.containerTheme = psConst.THEME_MAP[v];
-    }
-  });
+    $scope.containerTheme = psConst.THEME_MAP[$scope.options.theme];
+  }
 
+  function _parseOptions(locationHash) {
+    var c = 0,
+        keyBuf = null,
+        output = {};
+    angular.forEach(locationHash.split(/\//), function (piece) {
+      if (piece != '') {
+        if (c % 2 === 0) {
+          // key
+          keyBuf = piece;
+        }
+        else if (keyBuf !== null) {
+          // value
+          output[keyBuf] = piece;
+          keyBuf = null;
+        }
+        c++;
+      }
+    });
+    return output;
+  }
 });

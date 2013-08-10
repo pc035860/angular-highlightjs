@@ -3,6 +3,16 @@ body {
     background-color: #2f2f2f;
 }
 
+.tab-container {
+    position: absolute;
+    top: 42px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    overflow: auto;
+}
+
 .tab-container pre {
     padding: 0;
     border: none;
@@ -18,11 +28,20 @@ body {
 }
 
 .nav-tabs {
-    border-bottom: 2px solid rgb(153, 153, 153);
+    margin-bottom: 0;
+    border-bottom: 1px solid rgb(153, 153, 153);
+
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    left: 0; right: 0;
+
+    margin-bottom: 0;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, .3)
 }
 .nav-tabs>li {
     margin-bottom: -2px;
-    border-bottom: 2px solid rgb(153, 153, 153);
+    border-bottom: 1px solid rgb(153, 153, 153);
 }
 .nav-tabs>li>a {
     color: #76daff;
@@ -35,6 +54,7 @@ body {
 
 .nav-tabs>li.active {
     border-color: white;
+    border-width: 2px;
     box-shadow: inset 5px 0px 8px -5px rgba(0, 0, 0, 0.5), inset -5px 0px 8px -5px rgba(0, 0, 0, 0.5)
 }
 
@@ -43,4 +63,11 @@ body {
     color: white;
     border: none;
     background-color: transparent;
+}
+
+.edit-on-plunker {
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    right: 0;
 }
