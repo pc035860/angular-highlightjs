@@ -1,22 +1,36 @@
 <div>
-  <h3 class="muted" ng-show="files.length == 0">
-    loading&hellip;
+  <h3 class="text-muted" ng-show="files.length == 0">
+    &nbsp; loading&hellip;
   </h3>
   <div class="main-content" ng-show="files.length > 0">
-    <a href="" class="btn btn-success pull-right" ng-click="editOnPlunker()">Edit on Plunker</a>
-    <ul class="nav nav-tabs" 
-        ng-select="currentFilename"
-        select-class="{'active': $optSelected}">
-    
-      <li ng-repeat="file in files" 
-          ng-select-option="{{ file.name }}">
-    
-        <a href="">{{ file.name }}</a>
-      </li>
-    </ul>
+    <div class="nav-container" 
+         ng-select="currentFilename"
+         select-class="{'active': $optSelected}">
+
+      <div class="action-buttons clearfix">
+        <a ng-href="http://plnkr.co/edit/{{ plunkId }}" class="btn btn-success edit-on-plunker pull-right" target="_blank">&nbsp; Edit &nbsp;</a>
+        <a href="" class="btn btn-primary view-result pull-right"
+           ng-if="config.result"
+           ng-select-option="?RESULT?">Result</a>
+      </div>
+      <ul class="nav nav-tabs">
+        <li ng-repeat="file in files" 
+            ng-select-option="{{ file.name }}">
+      
+          <a href="">{{ file.name }}</a>
+        </li>
+      </ul>
+    </div>
     <div class="tab-container">
       <div ng-repeat="file in files">
-        <div ng-if="file.name == currentFilename" hljs source="fileIndex[currentFilename].content"></div>
+        <div ng-if="file.name == currentFilename" 
+             hljs 
+             source="fileIndex[currentFilename].content"
+             onhighlight="onHighlight()"></div>
+      </div>
+      <div class="result-content" ng-show="'?RESULT?' == currentFilename">
+        <iframe frameborder="0" width="100%" height="100%" 
+                ng-if="'?RESULT?' == currentFilename" ng-src="http://run.plnkr.co/plunks/{{ plunkId }}/"></iframe>
       </div>
     </div>
   </div>

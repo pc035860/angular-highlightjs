@@ -38,27 +38,11 @@ angular.module('plunkSourceApp', ['plunkSource'])
 
 .config(function ($routeProvider) {
   $routeProvider
-  .when('/:plunkId*options', {
-    templateUrl: 'main.html',
-    controller: 'PlunkCtrl'
+  .when('/plunk/:plunkId*options', {
+    templateUrl: 'partials/main.html',
+    controller: 'MainCtrl'
   })
   .otherwise({
-    redirectTo: '/OPxzDu'
+    redirectTo: '/plunk/OPxzDu'
   });
-})
-
-.controller('PlunkCtrl', function($scope, $routeParams, psConst) {
-
-  $scope.plunkId = $routeParams.plunkId;
-
-  $scope.containerTheme = 'light';
-  $scope.highlightTheme = 'default';
-  angular.forEach($routeParams.options.split(/\//), function (v) {
-    if (v != '' && v in psConst.THEME_MAP) {
-      $scope.highlightTheme = v;
-
-      $scope.containerTheme = psConst.THEME_MAP[v];
-    }
-  });
-
 });
