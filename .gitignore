@@ -2,3 +2,5 @@ node_modules
 angular-highlightjs.sublime-*
 .tern-port
 .DS_Store
+bower_components/angular/docs
+bower_components/angular/i18n
