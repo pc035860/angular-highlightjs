@@ -78,9 +78,12 @@ angular.module('plunkSource', ['ngSelect', 'hljs'])
           _highlighted = false;
 
       scope.fileIndex = null;
-      scope.currentFilename = null;
-      scope.specifiedFileContent = null;
       scope.files = [];
+
+      scope.model = {
+        currentFilename: null,
+        specifiedFileContent: null
+      };
 
       scope.editOnPlunker = function () {
         _openPlunker(_plunkData);
@@ -95,7 +98,7 @@ angular.module('plunkSource', ['ngSelect', 'hljs'])
       scope.$watch('plunkId', function (newId, oldId) {
         if (angular.isString(newId) && newId) {
           scope.fileIndex = {};
-          scope.currentFilename = null;
+          scope.model.currentFilename = null;
           scope.files.length = 0;
 
           _apiPlunkData(newId)
@@ -109,7 +112,7 @@ angular.module('plunkSource', ['ngSelect', 'hljs'])
               scope.fileIndex[name] = obj;
             });
 
-            scope.currentFilename = scope.files[0].name;
+            scope.model.currentFilename = scope.files[0].name;
 
             // save plunk data
             _plunkData = data;
@@ -124,9 +127,9 @@ angular.module('plunkSource', ['ngSelect', 'hljs'])
           // process config
           
           angular.forEach(_config, function (k, v) {
-            switch (k) {
+            switch (v) {
               case 'result':
-                v = scope.$eval(v);
+                _config[v] = scope.$eval(k);
                 break;
             }
           });
@@ -146,9 +149,9 @@ angular.module('plunkSource', ['ngSelect', 'hljs'])
           iElm.find('pre').css('font-size', config.fontsize + 'px');
         }
 
-        scope.specifiedFileContent = null;
+        scope.model.specifiedFileContent = null;
         if (config.file && config.file in scope.fileIndex) {
-          scope.specifiedFileContent = scope.fileIndex[config.file].content;
+          scope.model.specifiedFileContent = scope.fileIndex[config.file].content;
 
           if (config.line) {
             var buf = config.line.split('-'),
@@ -163,14 +166,14 @@ angular.module('plunkSource', ['ngSelect', 'hljs'])
             }
 
             var lines = [];
-            angular.forEach(scope.specifiedFileContent.split(/^/m), function (l, i) {
+            angular.forEach(scope.model.specifiedFileContent.split(/^/m), function (l, i) {
               if (l !== '\n') {
                 lines.push(l);
               }
             });
-            console.log(scope.specifiedFileContent.split(/^/m), lines);
+            console.log(scope.model.specifiedFileContent.split(/^/m), lines);
 
-            scope.specifiedFileContent = lines.slice(fromLine - 1, toLine).join('\n');
+            scope.model.specifiedFileContent = lines.slice(fromLine - 1, toLine).join('\n');
           }
         }
       }
