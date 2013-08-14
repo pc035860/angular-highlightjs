@@ -1,14 +1,70 @@
+/*shared part start*/
 body {
-	padding: 0 !important;
+    padding: 0 !important;
+    background-color: transparent;
+}
+
+.tab-container {
+    
 }
 
 .tab-container pre {
-	padding: 0;
-	border: none;
-	margin-bottom: 0;
+    padding: 0;
+    border: none;
+    margin-bottom: 0;
 }
 
 .tab-container pre code {
-    /*background: none;*/
-    /*background-color: transparent;*/
+    position: absolute;
+    top: 42px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    overflow: auto;
+    font-size: 100%;
+}
+
+.nav-container {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    left: 0; right: 0;
+}
+
+.nav-tabs {
+    margin-bottom: 0;
+}
+
+.action-buttons {
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    right: 0;
+}
+
+.action-buttons > a {
+    margin-left: 2px;
+}
+
+.result-content {
+    position: absolute;
+    top: 42px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.result-content > iframe {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    overflow: auto;
+}
+/*shared part end*/
+
+.nav-container {
+    box-shadow: 0 1px 5px rgba(0,0,0,.1);
 }

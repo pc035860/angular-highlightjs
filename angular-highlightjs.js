@@ -1,11 +1,13 @@
 angular.module('hljs', [])
 
-.controller('HljsCtrl', [function HljsCtrl () {
+.controller('HljsCtrl', [
+function HljsCtrl () {
   var ctrl = this;
 
   var _elm = null,
       _lang = null,
-      _code = null;
+      _code = null,
+      _hlCb = null;
 
   ctrl.init = function (codeElm) {
     _elm = codeElm;
@@ -17,6 +19,10 @@ angular.module('hljs', [])
     if (_code) {
       ctrl.highlight(_code);
     }
+  };
+
+  ctrl.highlightCallback = function (cb) {
+    _hlCb = cb;
   };
 
   ctrl.highlight = function (code) {
@@ -38,6 +44,10 @@ angular.module('hljs', [])
     }
 
     _elm.html(res.value);
+
+    if (_hlCb !== null && angular.isFunction(_hlCb)) {
+      _hlCb();
+    }
   };
 
   ctrl.clear = function () {
@@ -67,6 +77,12 @@ angular.module('hljs', [])
 
       return function postLink(scope, iElm, iAttrs, ctrl) {
         ctrl.init(iElm.find('code'));
+
+        if (iAttrs.onhighlight) {
+          ctrl.highlightCallback(function () {
+            scope.$eval(iAttrs.onhighlight);
+          });
+        }
 
         if (staticCode) {
           ctrl.highlight(staticCode);

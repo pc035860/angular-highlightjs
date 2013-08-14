@@ -2,8 +2,11 @@ angular.module('plunkSource', ['ngSelect', 'hljs'])
 
 .factory('_apiPlunkData', function($http) {
   return function (plunkId) {
-    var api = "http://api.plnkr.co/plunks/";
-    return $http.get(api + plunkId)
+    var api = "http://api.plnkr.co/plunks/",
+        config = {
+          cache: true
+        };
+    return $http.get(api + plunkId, config)
       .then(function (res) {
         return res.data;
       });
@@ -60,19 +63,33 @@ angular.module('plunkSource', ['ngSelect', 'hljs'])
   };
 })
 
-.directive('plunkSource', function (_apiPlunkData, _openPlunker) {
+.directive('plunkSource', function (_apiPlunkData, _openPlunker, $q) {
   return {
     restrict: 'EA',
     scope: {
-      plunkId: "@plunkSource"
+      plunkId: "@plunkSource",
+      config: "=plunkSourceOptions"
     },
     templateUrl: 'plunk-source-template.html',
     link: function(scope, iElm, iAttrs) {
-      var _plunkData = null;
+      var _plunkData = null,
+          _config = null,
+          // first highlight flag
+          _highlighted = false;
 
       scope.fileIndex = null;
       scope.currentFilename = null;
       scope.files = [];
+
+      scope.editOnPlunker = function () {
+        _openPlunker(_plunkData);
+      };
+
+      scope.onHighlight = function () {
+        _highlighted = true;
+
+        _digestConfig(_config);
+      };
 
       scope.$watch('plunkId', function (newId, oldId) {
         if (angular.isString(newId) && newId) {
@@ -97,12 +114,37 @@ angular.module('plunkSource', ['ngSelect', 'hljs'])
             _plunkData = data;
           });
         }
-
       });
 
-      scope.editOnPlunker = function () {
-        _openPlunker(_plunkData);
-      };
+      scope.$watch('config', function (config) {
+        if (angular.isDefined(config) && angular.isObject(config)) {
+          _config = angular.copy(config);
+
+          // process config
+          
+          angular.forEach(_config, function (k, v) {
+            switch (k) {
+              case 'result':
+                v = scope.$eval(v);
+                break;
+            }
+          });
+
+          if (_highlighted) {
+            _digestConfig(_config);
+          }
+        }
+      }, true);
+
+      function _digestConfig(config) {
+        if (!config) {
+          return;
+        }
+
+        if (config.fontsize) {
+          iElm.find('pre').css('font-size', config.fontsize + 'px');
+        }
+      }
     }
   };
 });

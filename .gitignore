@@ -4,3 +4,5 @@ angular-highlightjs.sublime-*
 .DS_Store
 bower_components/angular/docs
 bower_components/angular/i18n
+bower_components/jquery/
+bower_components/bootstrap/
