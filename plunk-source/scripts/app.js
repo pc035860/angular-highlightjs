@@ -42,7 +42,7 @@ angular.module('plunkSourceApp', ['plunkSource', 'ui.state'])
 
   $stateProvider
     .state('plunk', {
-      url: '/:plunkId?theme&fontsize&file&line'
+      url: '/:plunkId?theme&fontsize&file&line&result'
     });
 
 });
