@@ -25,6 +25,10 @@ body {
     font-size: 100%;
 }
 
+.file-specified .tab-container pre code {
+	top: 0 !important;
+}
+
 .nav-container {
     position: fixed;
     z-index: 2;
