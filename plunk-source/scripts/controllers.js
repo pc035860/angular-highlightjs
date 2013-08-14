@@ -1,17 +1,34 @@
 angular.module('plunkSourceApp')
 
-.controller('MainCtrl', function($scope, $routeParams, psConst) {
+.controller('MainCtrl', function($scope, $stateParams, $state, psConst) {
 
-  $scope.plunkId = $routeParams.plunkId;
-  $scope.options = _parseOptions($routeParams.options);
+  var _isEmptyObj = (function () {
+    var emptyObj = {};
+    return function (obj) {
+      return angular.equals(obj, emptyObj);
+    };
+  }());
 
-  $scope.containerTheme = 'light';
-  $scope.highlightTheme = 'default';
-  if ($scope.options.theme in psConst.THEME_MAP) {
-    $scope.highlightTheme = $scope.options.theme;
+  $scope.$stateParams = $stateParams;
+  $scope.$watch('$stateParams', function (params) {
 
-    $scope.containerTheme = psConst.THEME_MAP[$scope.options.theme];
-  }
+    if (!_isEmptyObj(params)) {
+      $scope.plunkId = $stateParams.plunkId;
+
+      var options = angular.copy(params);
+      delete options.plunkId;
+      $scope.options = options;
+
+      $scope.containerTheme = 'light';
+      $scope.highlightTheme = 'default';
+      if ($scope.options.theme in psConst.THEME_MAP) {
+        $scope.highlightTheme = $scope.options.theme;
+
+        $scope.containerTheme = psConst.THEME_MAP[$scope.options.theme];
+      }
+    }
+
+  }, true);
 
   function _parseOptions(locationHash) {
     var c = 0,

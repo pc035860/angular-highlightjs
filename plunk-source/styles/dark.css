@@ -25,6 +25,10 @@ body {
     font-size: 100%;
 }
 
+.file-specified .tab-container pre code {
+	top: 0 !important;
+}
+
 .action-buttons {
     position: absolute;
     z-index: 3;

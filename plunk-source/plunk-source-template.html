@@ -2,8 +2,9 @@
   <h3 class="text-muted" ng-show="files.length == 0">
     &nbsp; loading&hellip;
   </h3>
-  <div class="main-content" ng-show="files.length > 0">
+  <div class="main-content" ng-show="files.length > 0" ng-class="{'file-specified': specifiedFileContent}">
     <div class="nav-container" 
+         ng-if="!specifiedFileContent"
          ng-select="currentFilename"
          select-class="{'active': $optSelected}">
 
@@ -22,15 +23,22 @@
       </ul>
     </div>
     <div class="tab-container">
-      <div ng-repeat="file in files">
-        <div ng-if="file.name == currentFilename" 
-             hljs 
-             source="fileIndex[currentFilename].content"
+      <div ng-if="specifiedFileContent">
+        <div hljs
+             source="specifiedFileContent"
              onhighlight="onHighlight()"></div>
       </div>
-      <div class="result-content" ng-show="'?RESULT?' == currentFilename">
-        <iframe frameborder="0" width="100%" height="100%" 
-                ng-if="'?RESULT?' == currentFilename" ng-src="http://run.plnkr.co/plunks/{{ plunkId }}/"></iframe>
+      <div ng-if="!specifiedFileContent">
+        <div ng-repeat="file in files">
+          <div ng-if="file.name == currentFilename" 
+               hljs 
+               source="fileIndex[currentFilename].content"
+               onhighlight="onHighlight()"></div>
+        </div>
+        <div class="result-content" ng-show="'?RESULT?' == currentFilename">
+          <iframe frameborder="0" width="100%" height="100%" 
+                  ng-if="'?RESULT?' == currentFilename" ng-src="http://run.plnkr.co/plunks/{{ plunkId }}/"></iframe>
+        </div>
       </div>
     </div>
   </div>

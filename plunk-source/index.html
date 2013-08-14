@@ -10,6 +10,7 @@
   <script src="../bower_components/highlightjs/highlight.pack.js"></script>
 
   <script src="../bower_components/angular/angular.min.js"></script>
+  <script src="../bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
   <script src="../angular-highlightjs.min.js"></script>
   <script src="../bower_components/ngSelect/ngSelect.min.js"></script>
 
@@ -18,7 +19,17 @@
   <script src="scripts/app.js"></script>
   <script src="scripts/controllers.js"></script>
 </head>
-<body>
-  <div ng-view></div>
+<body ng-controller="MainCtrl">
+
+  <link rel="stylesheet" type="text/css" 
+        ng-if="containerTheme"
+        ng-href="styles/{{ containerTheme }}.css">
+
+  <link rel="stylesheet" type="text/css"
+        ng-if="highlightTheme"
+        ng-href="../bower_components/highlightjs/styles/{{ highlightTheme }}.css">
+
+  <div plunk-source="{{ plunkId }}" plunk-source-options="options"></div>
+
 </body>
 </html>

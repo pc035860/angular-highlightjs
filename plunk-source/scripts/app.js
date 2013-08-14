@@ -1,4 +1,4 @@
-angular.module('plunkSourceApp', ['plunkSource'])
+angular.module('plunkSourceApp', ['plunkSource', 'ui.state'])
 
 .constant('psConst', {
   THEME_MAP: {
@@ -36,13 +36,13 @@ angular.module('plunkSourceApp', ['plunkSource'])
   }
 })
 
-.config(function ($routeProvider) {
-  $routeProvider
-  .when('/plunk/:plunkId*options', {
-    templateUrl: 'partials/main.html',
-    controller: 'MainCtrl'
-  })
-  .otherwise({
-    redirectTo: '/plunk/OPxzDu'
-  });
+.config(function ($stateProvider, $urlRouterProvider) {
+
+  $urlRouterProvider.otherwise('/OPxzDu');
+
+  $stateProvider
+    .state('plunk', {
+      url: '/:plunkId?theme&fontsize&file&line'
+    });
+
 });
