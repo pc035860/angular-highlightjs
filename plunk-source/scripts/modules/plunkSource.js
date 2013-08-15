@@ -165,15 +165,10 @@ angular.module('plunkSource', ['ngSelect', 'hljs'])
               toLine = buf[1];
             }
 
-            var lines = [];
-            angular.forEach(scope.model.specifiedFileContent.split(/^/m), function (l, i) {
-              if (l !== '\n') {
-                lines.push(l);
-              }
-            });
-            console.log(scope.model.specifiedFileContent.split(/^/m), lines);
-
-            scope.model.specifiedFileContent = lines.slice(fromLine - 1, toLine).join('\n');
+            var lines = scope.model.specifiedFileContent.match(/^.*$/mg);
+            if (lines) {
+              scope.model.specifiedFileContent = lines.slice(fromLine - 1, toLine).join('\n');
+            }
           }
         }
       }
