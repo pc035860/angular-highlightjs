@@ -1,7 +1,14 @@
 angular.module('hljs', [])
 
+.factory('$hljsCache', [
+         '$cacheFactory',
+function ($cacheFactory) {
+  return $cacheFactory('$hljsCache');
+}])
+
 .controller('HljsCtrl', [
-function HljsCtrl () {
+                  '$hljsCache',
+function HljsCtrl ($hljsCache) {
   var ctrl = this;
 
   var _elm = null,
@@ -30,17 +37,21 @@ function HljsCtrl () {
       return;
     }
 
-    var res;
+    var res, cacheKey;
 
     _code = code;
 
     if (_lang) {
       // language specified
-      res = hljs.highlight(_lang, _code, true);
+      cacheKey = ctrl._cacheKey(_lang, _code);
+      res = $hljsCache.get(cacheKey) || 
+            $hljsCache.put(cacheKey, hljs.highlight(_lang, _code, true));
     }
     else {
       // language auto-detect
-      res = hljs.highlightAuto(_code);
+      cacheKey = ctrl._cacheKey(_code);
+      res = $hljsCache.get(cacheKey) || 
+            $hljsCache.put(cacheKey, hljs.highlightAuto(_code));
     }
 
     _elm.html(res.value);
@@ -60,6 +71,12 @@ function HljsCtrl () {
 
   ctrl.release = function () {
     _elm = null;
+  };
+
+  ctrl._cacheKey = function () {
+    var args = Array.prototype.slice.call(arguments),
+        glue = "!angular-highlightjs!";
+    return args.join(glue);
   };
 }])
 

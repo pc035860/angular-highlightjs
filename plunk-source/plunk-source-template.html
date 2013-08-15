@@ -30,9 +30,9 @@
       </div>
       <div ng-if="!model.specifiedFileContent">
         <div ng-repeat="file in files">
-          <div ng-if="file.name == model.currentFilename" 
+          <div ng-show="file.name == model.currentFilename" 
                hljs 
-               source="fileIndex[model.currentFilename].content"
+               source="file.content"
                onhighlight="onHighlight()"></div>
         </div>
         <div class="result-content" ng-show="'?RESULT?' == model.currentFilename">
