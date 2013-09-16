@@ -44,14 +44,22 @@ function HljsCtrl ($hljsCache) {
     if (_lang) {
       // language specified
       cacheKey = ctrl._cacheKey(_lang, _code);
-      res = $hljsCache.get(cacheKey) || 
-            $hljsCache.put(cacheKey, hljs.highlight(_lang, _code, true));
+      res = $hljsCache.get(cacheKey);
+
+      if (!res) {
+        res = hljs.highlight(_lang, _code, true);
+        $hljsCache.put(cacheKey, res);
+      }
     }
     else {
       // language auto-detect
       cacheKey = ctrl._cacheKey(_code);
-      res = $hljsCache.get(cacheKey) || 
-            $hljsCache.put(cacheKey, hljs.highlightAuto(_code));
+      res = $hljsCache.get(cacheKey);
+
+      if (!res) {
+        res = hljs.highlightAuto(_code);
+        $hljsCache.put(cacheKey, res);
+      }
     }
 
     _elm.html(res.value);
