@@ -17,8 +17,8 @@ Follow the instructions [here](http://softwaremaniacs.org/soft/highlight/en/down
 Using a prebuilt version of highlight.js hosted at Yandex here.
 ```html
 <!-- personal preference: github theme -->
-<link rel="stylesheet" href="http://yandex.st/highlightjs/7.3/styles/github.min.css">
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+<link rel="stylesheet" href="http://yandex.st/highlightjs/8.0/styles/github.min.css">
+<script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script>
 ```
 
 Include `angular-highlightjs` module script with AngularJS script on your page.
