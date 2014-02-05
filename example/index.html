@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>angular-highlightjs examples</title>
 
-  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/animatecss/0.1/animate.min.css">
   <link rel="stylesheet" href="../bower_components/highlightjs/styles/github.css">
   <link rel="stylesheet/less" type="text/css" href="styles.less" />
@@ -19,21 +19,25 @@
   <script src="scripts/controllers.js"></script>
 </head>
 <body ng-controller="ExampleCtrl">
-  <div class="source-overlay" ng-show="source"></div>
+  <div class="source-overlay" ng-show="source" ng-click="toggleSource()"></div>
+
   <div class="container">
-    <div class="navbar">
-      <div class="navbar-inner">
-        <a href="https://github.com/pc035860/angular-highlightjs" class="brand">angular-highlightjs example</a>
-        <ul class="nav">
-          <li ng-repeat="link in linkList" ng-class="{'active': path == link}">
-            <a ng-href="#{{ link }}">{{ link.substr(1) }}</a>
-          </li>
-        </ul>
-        <button class="btn btn-primary show-source" ng-click="toggleSource()" ng-show="!source">show source</button>
-        <button class="btn btn-primary show-source" ng-click="toggleSource()" ng-show="source">hide source</button>
+
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="navbar-header">
+        <a href="https://github.com/pc035860/angular-highlightjs" class="navbar-brand">angular-highlightjs example</a>
       </div>
-    </div>
-    <div class="container source-stage" ng-show="source">
+
+      <ul class="nav navbar-nav">
+        <li ng-repeat="link in linkList" ng-class="{'active': path == link}">
+          <a ng-href="#{{ link }}">{{ link.substr(1) }}</a>
+        </li>
+      </ul>
+      <button class="btn btn-primary show-source" ng-click="toggleSource()" ng-show="!source">show source</button>
+      <button class="btn btn-primary show-source" ng-click="toggleSource()" ng-show="source">hide source</button>
+    </nav>
+
+    <div class="source-stage" ng-show="source">
       <div hljs source="source"></div>
     </div>
     <div ng-view></div>
