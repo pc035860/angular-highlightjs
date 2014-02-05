@@ -98,7 +98,7 @@ function HljsCtrl ($hljsCache) {
       var staticCode = tElm[0].innerHTML.replace(/^\r\n|\r|\n/, '');
 
       // put template
-      tElm.html('<pre><code></code></pre>');
+      tElm.html('<pre><code class="hljs"></code></pre>');
 
       return function postLink(scope, iElm, iAttrs, ctrl) {
         ctrl.init(iElm.find('code'));
