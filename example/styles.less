@@ -5,11 +5,13 @@ body > .container {
 }
 
 pre {
-	padding: 0 .3em;
-	background-color: none;
+	padding: 0;
+	// background-color: transparent;
+	border: none;
+	font-size: inherit;
 
-	code {
-		background: none;
+	code.hljs {
+		background-color: darken(#f8f8f8, 1%);
 	}
 }
 
@@ -37,27 +39,25 @@ small {
 	left: 0; top: 0;
 	right: 0; bottom: 0;
 
-	background-color: rgba(0, 0, 0, 0.3);
+	background-color: rgba(0, 0, 0, 0.5);
 }
 
 .source-stage {
 	position: absolute;
 	z-index: 10;
 
-	top: 50px;
+	top: 55px;
 }
 
 .navbar {
 	position: relative;
 	z-index: 2;
-	.navbar-inner {
-		position: relative;
 
-		.show-source {
-			position: absolute;
+	.show-source {
+		position: absolute;
 
-			right: 10px;
-		}
+		right: 10px;
+		top: 7px;
 	}
 }
 
