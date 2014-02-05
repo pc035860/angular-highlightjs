@@ -2,7 +2,10 @@
 
 AngularJS directive for syntax highlighting with [highlight.js](http://highlightjs.org/).
 
-#### [Demo](http://plnkr.co/edit/OPxzDu?p=preview)
+#### Demos
+
+* [Self-highlight plunk](http://plnkr.co/edit/OPxzDu?p=preview)
+* [JSON pretty print](http://plnkr.co/edit/WCmBTQ?p=preview)
 
 ## Requirements
 
