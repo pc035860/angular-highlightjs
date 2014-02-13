@@ -175,7 +175,14 @@ function ($http,   $templateCache,   $q) {
             templateCachePromise = $templateCache.get(src);
             if (!templateCachePromise) {
               dfd = $q.defer();
-              $http.get(src, {cache: $templateCache}).success(function (code) {
+              $http.get(src, {
+                cache: $templateCache,
+                transformResponse: function(data, headersGetter) {
+                  // Return the raw string, so $http doesn't parse it
+                  // if it's json.
+                  return data;
+                }
+              }).success(function (code) {
                 if (thisChangeId !== changeCounter) {
                   return;
                 }
