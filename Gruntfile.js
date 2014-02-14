@@ -3,7 +3,11 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     jshint: {
       options: {
-        curly: true
+        curly: true,
+        multistr: true,
+        expr: true,
+        boss: true,
+        undef: true
       },
       beforeuglify: ['<%= pkg.name %>.js'],
       gruntfile: ['Gruntfile.js']
