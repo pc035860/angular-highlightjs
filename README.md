@@ -49,7 +49,20 @@ bower install PatternConsulting/bower-angular
 bower install angular-highlightjs
 ```
 
-## Usage
+## Configuration
+
+In configuration phase, call `hljsServiceProvider.setOptions()` to configure with [highlight.js options](http://highlightjs.readthedocs.org/en/latest/api.html#configure-options).
+
+```js
+myApp.config(function (hljsServiceProvider) {
+  hljsServiceProvider.setOptions({
+    // replace tab with 4 spaces
+    tabReplace: '    '
+  });
+});
+```
+
+## Directive usage
 
 ### hljs
 This is a required directive. Without any other supportive directives, it provides basic inline highlight function. For better understanding, some notes about using it are specified in the live example page.
