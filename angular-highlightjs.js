@@ -1,14 +1,32 @@
+/*global angular*/
 angular.module('hljs', [])
 
-.factory('$hljsCache', [
+.provider('hljsService', function () {
+  var _hljsOptions = {};
+
+  return {
+    setOptions: function (options) {
+      angular.extend(_hljsOptions, options);
+    },
+    getOptions: function () {
+      return angular.copy(_hljsOptions);
+    },
+    $get: ['$window', function ($window) {
+      $window.hljs.configure(_hljsOptions);
+      return $window.hljs;
+    }]
+  };
+})
+
+.factory('hljsCache', [
          '$cacheFactory',
 function ($cacheFactory) {
-  return $cacheFactory('$hljsCache');
+  return $cacheFactory('hljsCache');
 }])
 
 .controller('HljsCtrl', [
-                  '$hljsCache',
-function HljsCtrl ($hljsCache) {
+                  'hljsCache', 'hljsService',
+function HljsCtrl (hljsCache,   hljsService) {
   var ctrl = this;
 
   var _elm = null,
@@ -44,21 +62,21 @@ function HljsCtrl ($hljsCache) {
     if (_lang) {
       // language specified
       cacheKey = ctrl._cacheKey(_lang, _code);
-      res = $hljsCache.get(cacheKey);
+      res = hljsCache.get(cacheKey);
 
       if (!res) {
-        res = hljs.highlight(_lang, _code, true);
-        $hljsCache.put(cacheKey, res);
+        res = hljsService.highlight(_lang, hljsService.fixMarkup(_code), true);
+        hljsCache.put(cacheKey, res);
       }
     }
     else {
       // language auto-detect
       cacheKey = ctrl._cacheKey(_code);
-      res = $hljsCache.get(cacheKey);
+      res = hljsCache.get(cacheKey);
 
       if (!res) {
-        res = hljs.highlightAuto(_code);
-        $hljsCache.put(cacheKey, res);
+        res = hljsService.highlightAuto(hljsService.fixMarkup(_code));
+        hljsCache.put(cacheKey, res);
       }
     }
 
