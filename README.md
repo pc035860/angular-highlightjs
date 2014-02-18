@@ -51,6 +51,8 @@ bower install angular-highlightjs
 
 ## Configuration
 
+**Configuration works with highlight.js >= 8.0**
+
 In configuration phase, call `hljsServiceProvider.setOptions()` to configure with [highlight.js options](http://highlightjs.readthedocs.org/en/latest/api.html#configure-options).
 
 ```js
