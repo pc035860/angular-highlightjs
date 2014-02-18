@@ -12,7 +12,7 @@ angular.module('hljs', [])
       return angular.copy(_hljsOptions);
     },
     $get: ['$window', function ($window) {
-      $window.hljs.configure(_hljsOptions);
+      ($window.hljs.configure || angular.noop)(_hljsOptions);
       return $window.hljs;
     }]
   };
