@@ -113,7 +113,7 @@ function HljsCtrl (hljsCache,   hljsService) {
     compile: function(tElm, tAttrs, transclude) {
       // get static code
       // strip the starting "new line" character
-      var staticCode = tElm[0].innerHTML.replace(/^\r\n|\r|\n/, '');
+      var staticCode = tElm[0].innerHTML.replace(/^(\r\n|\r|\n)/m, '');
 
       // put template
       tElm.html('<pre><code class="hljs"></code></pre>');
@@ -230,7 +230,7 @@ function ($http,   $templateCache,   $q) {
                 code = code.data;
               }
 
-              code = code.replace(/^\r\n|\r|\n/, '');
+              code = code.replace(/^(\r\n|\r|\n)/m, '');
               ctrl.highlight(code);
             });
           }
