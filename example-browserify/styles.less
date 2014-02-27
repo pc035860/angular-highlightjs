@@ -1,0 +1,85 @@
+@import "lesshat";
+
+body > .container {
+	position: relative;
+}
+
+pre {
+	padding: 0;
+	// background-color: transparent;
+	border: none;
+	font-size: inherit;
+
+	code.hljs {
+		background-color: darken(#f8f8f8, 1%);
+	}
+}
+
+small {
+	strong {
+		color: #333;
+	}
+	color: gray;
+}
+
+[ng-view] {
+	padding: 0 20px;
+
+	input {
+		font-size: 20px;
+	}
+}
+
+.source-overlay {
+	position: fixed;
+	z-index: 1;
+
+	width: 100%;
+
+	left: 0; top: 0;
+	right: 0; bottom: 0;
+
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.source-stage {
+	position: absolute;
+	z-index: 10;
+
+	top: 55px;
+}
+
+.navbar {
+	position: relative;
+	z-index: 2;
+
+	.show-source {
+		position: absolute;
+
+		right: 10px;
+		top: 7px;
+	}
+}
+
+.example {
+	.item () {
+		.transition(~"all 150ms linear");
+		cursor: pointer;
+
+		&.selected {
+			cursor: default;
+			.box-shadow(~"0 0 10px 2px rgba(252, 18, 36, 0.5)");
+		}
+	}
+
+	img {
+		.item;
+		margin-left: 10px;
+	}
+
+	&.multiple {
+		.selected {
+			cursor: pointer !important;
+		}
+	}
+}

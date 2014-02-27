@@ -1,244 +1,259 @@
-/*global angular*/
-angular.module('hljs', [])
+/*global define, require, exports*/
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['exports', 'angular', 'highlight.js'], factory);
+  } else if (typeof exports === 'object') {
+    // CommonJS
+    factory(exports, require('angular'), require('highlight.js'));
+  } else {
+    // Browser globals
+    factory((root.commonJsStrict = {}), root.angular, root.hljs);
+  }
+}(this, function (exports, angular, hljs) {
 
-.provider('hljsService', function () {
-  var _hljsOptions = {};
+  angular.module('hljs', [])
 
-  return {
-    setOptions: function (options) {
-      angular.extend(_hljsOptions, options);
-    },
-    getOptions: function () {
-      return angular.copy(_hljsOptions);
-    },
-    $get: ['$window', function ($window) {
-      ($window.hljs.configure || angular.noop)(_hljsOptions);
-      return $window.hljs;
-    }]
-  };
-})
+  .provider('hljsService', function () {
+    var _hljsOptions = {};
 
-.factory('hljsCache', [
-         '$cacheFactory',
-function ($cacheFactory) {
-  return $cacheFactory('hljsCache');
-}])
-
-.controller('HljsCtrl', [
-                  'hljsCache', 'hljsService',
-function HljsCtrl (hljsCache,   hljsService) {
-  var ctrl = this;
-
-  var _elm = null,
-      _lang = null,
-      _code = null,
-      _hlCb = null;
-
-  ctrl.init = function (codeElm) {
-    _elm = codeElm;
-  };
-
-  ctrl.setLanguage = function (lang) {
-    _lang = lang;
-
-    if (_code) {
-      ctrl.highlight(_code);
-    }
-  };
-
-  ctrl.highlightCallback = function (cb) {
-    _hlCb = cb;
-  };
-
-  ctrl.highlight = function (code) {
-    if (!_elm) {
-      return;
-    }
-
-    var res, cacheKey;
-
-    _code = code;
-
-    if (_lang) {
-      // language specified
-      cacheKey = ctrl._cacheKey(_lang, _code);
-      res = hljsCache.get(cacheKey);
-
-      if (!res) {
-        res = hljsService.highlight(_lang, hljsService.fixMarkup(_code), true);
-        hljsCache.put(cacheKey, res);
+    return {
+      setOptions: function (options) {
+        angular.extend(_hljsOptions, options);
+      },
+      getOptions: function () {
+        return angular.copy(_hljsOptions);
+      },
+      $get: function () {
+        (hljs.configure || angular.noop)(_hljsOptions);
+        return hljs;
       }
-    }
-    else {
-      // language auto-detect
-      cacheKey = ctrl._cacheKey(_code);
-      res = hljsCache.get(cacheKey);
+    };
+  })
 
-      if (!res) {
-        res = hljsService.highlightAuto(hljsService.fixMarkup(_code));
-        hljsCache.put(cacheKey, res);
+  .factory('hljsCache', [
+           '$cacheFactory',
+  function ($cacheFactory) {
+    return $cacheFactory('hljsCache');
+  }])
+
+  .controller('HljsCtrl', [
+                    'hljsCache', 'hljsService',
+  function HljsCtrl (hljsCache,   hljsService) {
+    var ctrl = this;
+
+    var _elm = null,
+        _lang = null,
+        _code = null,
+        _hlCb = null;
+
+    ctrl.init = function (codeElm) {
+      _elm = codeElm;
+    };
+
+    ctrl.setLanguage = function (lang) {
+      _lang = lang;
+
+      if (_code) {
+        ctrl.highlight(_code);
       }
-    }
+    };
 
-    _elm.html(res.value);
+    ctrl.highlightCallback = function (cb) {
+      _hlCb = cb;
+    };
 
-    if (_hlCb !== null && angular.isFunction(_hlCb)) {
-      _hlCb();
-    }
-  };
+    ctrl.highlight = function (code) {
+      if (!_elm) {
+        return;
+      }
 
-  ctrl.clear = function () {
-    if (!_elm) {
-      return;
-    }
-    _code = null;
-    _elm.text('');
-  };
+      var res, cacheKey;
 
-  ctrl.release = function () {
-    _elm = null;
-  };
+      _code = code;
 
-  ctrl._cacheKey = function () {
-    var args = Array.prototype.slice.call(arguments),
-        glue = "!angular-highlightjs!";
-    return args.join(glue);
-  };
-}])
+      if (_lang) {
+        // language specified
+        cacheKey = ctrl._cacheKey(_lang, _code);
+        res = hljsCache.get(cacheKey);
 
-.directive('hljs', [function () {
-  return {
-    restrict: 'EA',
-    controller: 'HljsCtrl',
-    compile: function(tElm, tAttrs, transclude) {
-      // get static code
-      // strip the starting "new line" character
-      var staticCode = tElm[0].innerHTML.replace(/^(\r\n|\r|\n)/m, '');
-
-      // put template
-      tElm.html('<pre><code class="hljs"></code></pre>');
-
-      return function postLink(scope, iElm, iAttrs, ctrl) {
-        ctrl.init(iElm.find('code'));
-
-        if (iAttrs.onhighlight) {
-          ctrl.highlightCallback(function () {
-            scope.$eval(iAttrs.onhighlight);
-          });
+        if (!res) {
+          res = hljsService.highlight(_lang, hljsService.fixMarkup(_code), true);
+          hljsCache.put(cacheKey, res);
         }
+      }
+      else {
+        // language auto-detect
+        cacheKey = ctrl._cacheKey(_code);
+        res = hljsCache.get(cacheKey);
 
-        if (staticCode) {
-          ctrl.highlight(staticCode);
+        if (!res) {
+          res = hljsService.highlightAuto(hljsService.fixMarkup(_code));
+          hljsCache.put(cacheKey, res);
         }
+      }
 
-        scope.$on('$destroy', function () {
-          ctrl.release();
-        });
-      };
-    }
-  };
-}])
+      _elm.html(res.value);
 
-.directive('language', [function () {
-  return {
-    require: 'hljs',
-    restrict: 'A',
-    link: function (scope, iElm, iAttrs, ctrl) {
+      if (_hlCb !== null && angular.isFunction(_hlCb)) {
+        _hlCb();
+      }
+    };
 
-      iAttrs.$observe('language', function (lang) {
-        if (angular.isDefined(lang)) {
-          ctrl.setLanguage(lang);
-        }
-      });
-    }
-  };
-}])
+    ctrl.clear = function () {
+      if (!_elm) {
+        return;
+      }
+      _code = null;
+      _elm.text('');
+    };
 
-.directive('source', [function () {
-  return {
-    require: 'hljs',
-    restrict: 'A',
-    link: function(scope, iElm, iAttrs, ctrl) {
+    ctrl.release = function () {
+      _elm = null;
+    };
 
-      scope.$watch(iAttrs.source, function (newCode, oldCode) {
-        if (newCode) {
-          ctrl.highlight(newCode);
-        }
-        else {
-          ctrl.clear();
-        }
-      });
-    }
-  };
-}])
+    ctrl._cacheKey = function () {
+      var args = Array.prototype.slice.call(arguments),
+          glue = "!angular-highlightjs!";
+      return args.join(glue);
+    };
+  }])
 
-.directive('include', [
-         '$http', '$templateCache', '$q',
-function ($http,   $templateCache,   $q) {
-  return {
-    require: 'hljs',
-    restrict: 'A',
-    compile: function(tElm, tAttrs, transclude) {
-      var srcExpr = tAttrs.include;
+  .directive('hljs', [function () {
+    return {
+      restrict: 'EA',
+      controller: 'HljsCtrl',
+      compile: function(tElm, tAttrs, transclude) {
+        // get static code
+        // strip the starting "new line" character
+        var staticCode = tElm[0].innerHTML.replace(/^(\r\n|\r|\n)/m, '');
 
-      return function postLink(scope, iElm, iAttrs, ctrl) {
-        var changeCounter = 0;
+        // put template
+        tElm.html('<pre><code class="hljs"></code></pre>');
 
-        scope.$watch(srcExpr, function (src) {
-          var thisChangeId = ++changeCounter;
+        return function postLink(scope, iElm, iAttrs, ctrl) {
+          ctrl.init(iElm.find('code'));
 
-          if (src && angular.isString(src)) {
-            var templateCachePromise, dfd;
-
-            templateCachePromise = $templateCache.get(src);
-            if (!templateCachePromise) {
-              dfd = $q.defer();
-              $http.get(src, {
-                cache: $templateCache,
-                transformResponse: function(data, headersGetter) {
-                  // Return the raw string, so $http doesn't parse it
-                  // if it's json.
-                  return data;
-                }
-              }).success(function (code) {
-                if (thisChangeId !== changeCounter) {
-                  return;
-                }
-                dfd.resolve(code);
-              }).error(function() {
-                if (thisChangeId === changeCounter) {
-                  ctrl.clear();
-                }
-                dfd.resolve();
-              });
-              templateCachePromise = dfd.promise;
-            }
-            
-            $q.when(templateCachePromise)
-            .then(function (code) {
-              if (!code) {
-                return;
-              }
-
-              // $templateCache from $http
-              if (angular.isArray(code)) {
-                // 1.1.5
-                code = code[1];
-              }
-              else if (angular.isObject(code)) {
-                // 1.0.7
-                code = code.data;
-              }
-
-              code = code.replace(/^(\r\n|\r|\n)/m, '');
-              ctrl.highlight(code);
+          if (iAttrs.onhighlight) {
+            ctrl.highlightCallback(function () {
+              scope.$eval(iAttrs.onhighlight);
             });
+          }
+
+          if (staticCode) {
+            ctrl.highlight(staticCode);
+          }
+
+          scope.$on('$destroy', function () {
+            ctrl.release();
+          });
+        };
+      }
+    };
+  }])
+
+  .directive('language', [function () {
+    return {
+      require: 'hljs',
+      restrict: 'A',
+      link: function (scope, iElm, iAttrs, ctrl) {
+
+        iAttrs.$observe('language', function (lang) {
+          if (angular.isDefined(lang)) {
+            ctrl.setLanguage(lang);
+          }
+        });
+      }
+    };
+  }])
+
+  .directive('source', [function () {
+    return {
+      require: 'hljs',
+      restrict: 'A',
+      link: function(scope, iElm, iAttrs, ctrl) {
+
+        scope.$watch(iAttrs.source, function (newCode, oldCode) {
+          if (newCode) {
+            ctrl.highlight(newCode);
           }
           else {
             ctrl.clear();
           }
         });
-      };
-    }
-  };
-}]);
+      }
+    };
+  }])
+
+  .directive('include', [
+           '$http', '$templateCache', '$q',
+  function ($http,   $templateCache,   $q) {
+    return {
+      require: 'hljs',
+      restrict: 'A',
+      compile: function(tElm, tAttrs, transclude) {
+        var srcExpr = tAttrs.include;
+
+        return function postLink(scope, iElm, iAttrs, ctrl) {
+          var changeCounter = 0;
+
+          scope.$watch(srcExpr, function (src) {
+            var thisChangeId = ++changeCounter;
+
+            if (src && angular.isString(src)) {
+              var templateCachePromise, dfd;
+
+              templateCachePromise = $templateCache.get(src);
+              if (!templateCachePromise) {
+                dfd = $q.defer();
+                $http.get(src, {
+                  cache: $templateCache,
+                  transformResponse: function(data, headersGetter) {
+                    // Return the raw string, so $http doesn't parse it
+                    // if it's json.
+                    return data;
+                  }
+                }).success(function (code) {
+                  if (thisChangeId !== changeCounter) {
+                    return;
+                  }
+                  dfd.resolve(code);
+                }).error(function() {
+                  if (thisChangeId === changeCounter) {
+                    ctrl.clear();
+                  }
+                  dfd.resolve();
+                });
+                templateCachePromise = dfd.promise;
+              }
+              
+              $q.when(templateCachePromise)
+              .then(function (code) {
+                if (!code) {
+                  return;
+                }
+
+                // $templateCache from $http
+                if (angular.isArray(code)) {
+                  // 1.1.5
+                  code = code[1];
+                }
+                else if (angular.isObject(code)) {
+                  // 1.0.7
+                  code = code.data;
+                }
+
+                code = code.replace(/^(\r\n|\r|\n)/m, '');
+                ctrl.highlight(code);
+              });
+            }
+            else {
+              ctrl.clear();
+            }
+          });
+        };
+      }
+    };
+  }]);
+
+}));

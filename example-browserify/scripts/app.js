@@ -1,3 +1,8 @@
+require('../../angular-highlightjs.min');
+
+var angular = require('angular');
+require('angular-route');
+
 angular.module('exampleApp', ['hljs', 'ngRoute'])
 
 .constant('exampleRoutes', [

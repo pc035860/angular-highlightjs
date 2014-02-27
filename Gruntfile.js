@@ -1,5 +1,8 @@
 module.exports = function(grunt) {
   grunt.initConfig({
+    config: {
+      browserifyExampleDir: 'example-browserify'
+    },
     pkg: grunt.file.readJSON('package.json'),
     jshint: {
       options: {
@@ -28,6 +31,20 @@ module.exports = function(grunt) {
           '<%= pkg.repository.url %> */\n'
       }
     },
+    browserify: {
+      build: {
+        src: ['<%= config.browserifyExampleDir %>/scripts/main.js'],
+        dest: '<%= config.browserifyExampleDir %>/build/bundle.js',
+        options: {
+          // transform: ['browserify-shim'],
+          shim: {
+            'angular': { path: './bower_components/angular/angular.min.js', exports: 'angular'},
+            'angular-route': { path: './bower_components/angular-route/angular-route.min.js', exports: null},
+            'highlight.js': { path: './bower_components/highlightjs/highlight.pack.js', exports: 'hljs'}
+          }
+        }
+      }
+    },
     watch: {
       gruntfile: {
         files: 'Gruntfile.js',
@@ -53,6 +70,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-browserify');
 
   grunt.registerTask('default', ['jshint:beforeuglify', 'uglify']);
 };

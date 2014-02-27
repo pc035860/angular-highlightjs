@@ -1,0 +1,98 @@
+<h3>hljs</h3>
+<blockquote>
+  Basic usage of <code>hljs</code>, just drop code in the directive.
+  <br><br>
+  <span class="label label-info">Note</span>
+  <ul>
+    <li>Can't work with code contains <code>hljs</code> tag.</li>
+    <li>
+      Can't preserve whitespaces inside HTML tag. <small>Take a peek at the page source with "show source" on the top-right corner.</small>
+    </li>
+  </ul>
+  
+</blockquote>
+<hr>
+
+<small><strong>HTML</strong></small>
+<div hljs>
+<!-- setup selection display/input input:text -->
+<p class="lead">
+  selection: <input type="text" ng-model="selection">
+</p>
+
+<!-- bind scope.selection to ngSelect model -->
+<div class="row example" ng-select="selection">
+  <div class="col-xs-12">
+    
+    <!-- five images with number as option value -->
+    <!-- add "selected" class on option selected -->
+    <img class="img-polaroid img-circle" 
+         ng-repeat="num in [1, 2, 3, 4, 5] track by $id($index)" 
+         ng-src="http://lorempixel.com/100/100/sports/{{ num }}"
+         ng-select-option="{{ num }}" 
+         select-class="{'selected': $optSelected}">
+  </div>
+</div>
+</div>
+
+<small><strong>Django templates</strong> (ref: <a href="http://softwaremaniacs.org/media/soft/highlight/test.html">highlight.js demo page</a>)</small>
+<div hljs>
+{% if articles|length %}
+{% for article in articles %}
+
+{# Striped table #}
+<tr class="{% cycle odd,even %}">
+  <td>{{ article|default:"Hi... "|escape }}</td>
+  <td {% if article.today %}class="today"{% endif %}>{{ article.date|date:"d.m.Y" }}</td>
+</tr>
+
+{% endfor %}
+{% endif %}
+
+{% comment %}
+Comments may be long and
+multiline.
+{% endcomment %}
+</div>
+
+<small><strong>CSS</strong> (ref: <a href="http://softwaremaniacs.org/media/soft/highlight/test.html">highlight.js demo page</a>)</small>
+<div hljs>
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  body:first-of-type pre::after {
+    content: 'highlight: ' attr(class);
+  }
+}
+
+@import url('print.css');
+@page:right {
+ margin: 1cm 2cm 1.3cm 4cm;
+}
+
+@font-face {
+  font-family: Chunkfive; src: url('Chunkfive.otf');
+}
+
+div.text,
+#content,
+li[lang=ru] {
+  font: Tahoma, Chunkfive, sans-serif;
+  background: url('hatch.png') /* wtf? */;  color: #F0F0F0 !important;
+  width: 100%;
+}
+</div>
+
+<small><strong>JSON</strong> (ref: <a href="http://softwaremaniacs.org/media/soft/highlight/test.html">highlight.js demo page</a>)</small>
+<div hljs>
+[
+  {
+    "title": "apples",
+    "count": [12000, 20000],
+    "description": {"text": "...", "sensitive": false}
+  },
+  {
+    "title": "oranges",
+    "count": [17500, null],
+    "description": {"text": "...", "sensitive": false}
+  }
+]
+</div>
