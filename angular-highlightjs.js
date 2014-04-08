@@ -144,10 +144,12 @@ function HljsCtrl (hljsCache,   hljsService) {
     require: 'hljs',
     restrict: 'A',
     link: function (scope, iElm, iAttrs, ctrl) {
+      var code = iElm.find('code');
 
       iAttrs.$observe('language', function (lang) {
         if (angular.isDefined(lang)) {
           ctrl.setLanguage(lang);
+          code.addClass(lang);
         }
       });
     }
@@ -213,7 +215,7 @@ function ($http,   $templateCache,   $q) {
               });
               templateCachePromise = dfd.promise;
             }
-            
+
             $q.when(templateCachePromise)
             .then(function (code) {
               if (!code) {
