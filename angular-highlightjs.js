@@ -81,6 +81,8 @@ function HljsCtrl (hljsCache,   hljsService) {
     }
 
     _elm.html(res.value);
+    // language as class on the <code> tag
+    _elm.addClass(res.language);
 
     if (_hlCb !== null && angular.isFunction(_hlCb)) {
       _hlCb();
@@ -144,12 +146,9 @@ function HljsCtrl (hljsCache,   hljsService) {
     require: 'hljs',
     restrict: 'A',
     link: function (scope, iElm, iAttrs, ctrl) {
-      var code = iElm.find('code');
-
       iAttrs.$observe('language', function (lang) {
         if (angular.isDefined(lang)) {
           ctrl.setLanguage(lang);
-          code.addClass(lang);
         }
       });
     }
