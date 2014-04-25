@@ -108,7 +108,7 @@ function HljsCtrl (hljsCache,   hljsService) {
   };
 }])
 
-.directive('hljs', [function () {
+.directive('hljs', ['$interpolate', function ($interpolate) {
   return {
     restrict: 'EA',
     controller: 'HljsCtrl',
@@ -116,12 +116,12 @@ function HljsCtrl (hljsCache,   hljsService) {
       // get static code
       // strip the starting "new line" character
       var staticCode = tElm[0].innerHTML.replace(/^(\r\n|\r|\n)/m, '');
-
       // put template
-      tElm.html('<pre><code class="hljs"></code></pre>');
+	  tElm.addClass('hljs');
+      tElm.html('');
 
       return function postLink(scope, iElm, iAttrs, ctrl) {
-        ctrl.init(iElm.find('code'));
+        ctrl.init(iElm);
 
         if (iAttrs.onhighlight) {
           ctrl.highlightCallback(function () {
@@ -130,7 +130,7 @@ function HljsCtrl (hljsCache,   hljsService) {
         }
 
         if (staticCode) {
-          ctrl.highlight(staticCode);
+          ctrl.highlight($interpolate(staticCode)(scope));
         }
 
         scope.$on('$destroy', function () {
