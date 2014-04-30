@@ -163,7 +163,7 @@ function HljsCtrl (hljsCache,   hljsService) {
 
       scope.$watch(iAttrs.source, function (newCode, oldCode) {
         if (newCode) {
-          ctrl.highlight(newCode.replace(/^(\r\n|\r|\n)/m, ''));
+          ctrl.highlight(newCode);
           // compile the new DOM and link it to the current scope.
           // NOTE: we only compile .childNodes so that
           // we don't get into infinite loop compiling ourselves
