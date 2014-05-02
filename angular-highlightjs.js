@@ -155,7 +155,7 @@ function HljsCtrl (hljsCache,   hljsService) {
   };
 }])
 
-.directive('source', [function () {
+.directive('source', ['$compile', function ($compile) {
   return {
     require: 'hljs',
     restrict: 'A',
@@ -164,6 +164,10 @@ function HljsCtrl (hljsCache,   hljsService) {
       scope.$watch(iAttrs.source, function (newCode, oldCode) {
         if (newCode) {
           ctrl.highlight(newCode);
+          // compile the new DOM and link it to the current scope.
+          // NOTE: we only compile .childNodes so that
+          // we don't get into infinite loop compiling ourselves
+          $compile(iElm.find('code').contents())(scope);
         }
         else {
           ctrl.clear();
