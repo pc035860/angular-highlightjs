@@ -115,7 +115,7 @@ function HljsCtrl (hljsCache,   hljsService) {
     compile: function(tElm, tAttrs, transclude) {
       // get static code
       // strip the starting "new line" character
-      var staticCode = tElm[0].innerHTML.replace(/^(\r\n|\r|\n)/m, '');
+      var staticCode = tElm[0].textContent.replace(/^(\r\n|\r|\n)/m, '');
 
       // put template
       tElm.html('<pre><code class="hljs"></code></pre>');
