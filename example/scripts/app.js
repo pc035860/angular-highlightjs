@@ -1,7 +1,7 @@
-angular.module('exampleApp', ['hljs'])
+angular.module('exampleApp', ['ngRoute', 'hljs'])
 
 .constant('exampleRoutes', [
-  '/hljs', '/hljs-source', '/hljs-include', '/hljs-language'
+  '/hljs', '/hljs-source', '/hljs-include', '/hljs-language', '/hljs-compile'
 ])
 
 .config(['$routeProvider', 'exampleRoutes',
