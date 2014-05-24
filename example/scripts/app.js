@@ -1,4 +1,4 @@
-angular.module('exampleApp', ['hljs'])
+angular.module('exampleApp', ['ngRoute', 'hljs'])
 
 .constant('exampleRoutes', [
   '/hljs', '/hljs-source', '/hljs-include', '/hljs-language'
