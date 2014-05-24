@@ -15,7 +15,8 @@
     "tests"
   ],
   "dependencies": {
-  	"highlightjs": "8.0.0"
+  	"highlightjs": "8.0.0",
+  	"angular" : ">1.1.5"
   },
   "devDependencies": {
     "angular": "PatternConsulting/bower-angular#~1.1.5",
