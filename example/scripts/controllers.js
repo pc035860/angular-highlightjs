@@ -1,8 +1,8 @@
 angular.module('exampleApp')
 
 .controller('ExampleCtrl', [
-         '$scope', '$location', '$templateCache', 'exampleRoutes',
-function ($scope,   $location,   $templateCache,   exampleRoutes) {
+                    '$scope', '$location', '$templateCache', 'exampleRoutes',
+function ExampleCtrl($scope,   $location,   $templateCache,   exampleRoutes) {
 
   $scope.linkList = angular.copy(exampleRoutes);
 
@@ -29,4 +29,13 @@ function ($scope,   $location,   $templateCache,   exampleRoutes) {
 
     $scope.source = null;
   });
+}])
+
+.controller('CompileExampleCtrl', [
+                           '$scope',
+function CompileExampleCtrl($scope) {
+
+  $scope.name = 'Robin';
+  $scope.job = 'Front-end Engineer';
+
 }]);
