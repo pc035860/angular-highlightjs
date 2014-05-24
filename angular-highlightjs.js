@@ -108,19 +108,25 @@ function HljsCtrl (hljsCache,   hljsService) {
   };
 }])
 
-.directive('hljs', [function () {
+.directive('hljs', ['$compile', '$parse', function ($compile, $parse) {
   return {
     restrict: 'EA',
     controller: 'HljsCtrl',
     compile: function(tElm, tAttrs, transclude) {
       // get static code
       // strip the starting "new line" character
-      var staticCode = tElm[0].textContent.replace(/^(\r\n|\r|\n)/m, '');
+      var staticCode = tElm[0].innerHTML.replace(/^(\r\n|\r|\n)/m, '');
 
       // put template
       tElm.html('<pre><code class="hljs"></code></pre>');
 
       return function postLink(scope, iElm, iAttrs, ctrl) {
+        var compileCheck;
+
+        if (angular.isDefined(iAttrs.compile)) {
+          compileCheck = $parse(iAttrs.compile);
+        }
+
         ctrl.init(iElm.find('code'));
 
         if (iAttrs.onhighlight) {
@@ -131,6 +137,14 @@ function HljsCtrl (hljsCache,   hljsService) {
 
         if (staticCode) {
           ctrl.highlight(staticCode);
+
+          // Check if the highlight result needs to be compiled
+          if (compileCheck && compileCheck(scope)) {
+            // compile the new DOM and link it to the current scope.
+            // NOTE: we only compile .childNodes so that
+            // we don't get into infinite loop compiling ourselves
+            $compile(iElm.find('code').contents())(scope);
+          }
         }
 
         scope.$on('$destroy', function () {
@@ -155,19 +169,28 @@ function HljsCtrl (hljsCache,   hljsService) {
   };
 }])
 
-.directive('source', ['$compile', function ($compile) {
+.directive('source', ['$compile', '$parse', function ($compile, $parse) {
   return {
     require: 'hljs',
     restrict: 'A',
     link: function(scope, iElm, iAttrs, ctrl) {
+      var compileCheck;
+
+      if (angular.isDefined(iAttrs.compile)) {
+        compileCheck = $parse(iAttrs.compile);
+      }
 
       scope.$watch(iAttrs.source, function (newCode, oldCode) {
         if (newCode) {
           ctrl.highlight(newCode);
-          // compile the new DOM and link it to the current scope.
-          // NOTE: we only compile .childNodes so that
-          // we don't get into infinite loop compiling ourselves
-          $compile(iElm.find('code').contents())(scope);
+
+          // Check if the highlight result needs to be compiled
+          if (compileCheck && compileCheck(scope)) {
+            // compile the new DOM and link it to the current scope.
+            // NOTE: we only compile .childNodes so that
+            // we don't get into infinite loop compiling ourselves
+            $compile(iElm.find('code').contents())(scope);
+          }
         }
         else {
           ctrl.clear();
@@ -178,8 +201,8 @@ function HljsCtrl (hljsCache,   hljsService) {
 }])
 
 .directive('include', [
-         '$http', '$templateCache', '$q',
-function ($http,   $templateCache,   $q) {
+         '$http', '$templateCache', '$q', '$compile', '$parse',
+function ($http,   $templateCache,   $q,   $compile,   $parse) {
   return {
     require: 'hljs',
     restrict: 'A',
@@ -187,7 +210,11 @@ function ($http,   $templateCache,   $q) {
       var srcExpr = tAttrs.include;
 
       return function postLink(scope, iElm, iAttrs, ctrl) {
-        var changeCounter = 0;
+        var changeCounter = 0, compileCheck;
+
+        if (angular.isDefined(iAttrs.compile)) {
+          compileCheck = $parse(iAttrs.compile);
+        }
 
         scope.$watch(srcExpr, function (src) {
           var thisChangeId = ++changeCounter;
@@ -237,6 +264,14 @@ function ($http,   $templateCache,   $q) {
 
               code = code.replace(/^(\r\n|\r|\n)/m, '');
               ctrl.highlight(code);
+
+              // Check if the highlight result needs to be compiled
+              if (compileCheck && compileCheck(scope)) {
+                // compile the new DOM and link it to the current scope.
+                // NOTE: we only compile .childNodes so that
+                // we don't get into infinite loop compiling ourselves
+                $compile(iElm.find('code').contents())(scope);
+              }
             });
           }
           else {
