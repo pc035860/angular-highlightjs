@@ -26,7 +26,7 @@ Using a prebuilt version of highlight.js hosted at Yandex here.
 
 Include `angular-highlightjs` module script with AngularJS script on your page.
 ```html
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
 <script src="http://pc035860.github.io/angular-highlightjs/angular-highlightjs.min.js"></script>
 ```
 
@@ -37,14 +37,8 @@ angular.module('myApp', ['hljs']);
 
 ## Install with Bower
 
-Note that the `angular-highlightjs` bower package contains no AngularJS dependency.
 
 ```sh
-# install AngularJS (stable)
-bower install angular
-# or (unstable)
-bower install PatternConsulting/bower-angular
-
 # install angular-highlightjs & highlightjs
 bower install angular-highlightjs
 ```
