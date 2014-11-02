@@ -8,12 +8,15 @@
     <li>
       Can't preserve whitespaces inside HTML tag. <small>Take a peek at the page source with "show source" on the top-right corner.</small>
     </li>
+    <li>
+      Limitations above are not applicable when the <strong>auto-escape</strong> feature is off. <small>With <code>escape="false"</code> or <code>no-escape</code>.</small>
+    </li>
   </ul>
   
 </blockquote>
 <hr>
 
-<small><strong>HTML</strong></small>
+<small><strong>HTML</strong> (ref: <a href="http://pc035860.github.io/ngSelect/example/">ngSelect example</a>)</small>
 <div hljs>
 <!-- setup selection display/input input:text -->
 <p class="lead">
@@ -33,6 +36,28 @@
          select-class="{'selected': $optSelected}">
   </div>
 </div>
+</div>
+
+<small><strong>HTML without auto-escape</strong> (ref: <a href="http://pc035860.github.io/ngSelect/example/">ngSelect example</a>)</small>
+<div hljs no-escape>
+&lt;!-- setup selection display/input input:text --&gt;
+&lt;p class=&quot;lead&quot;&gt;
+  selection: &lt;input type=&quot;text&quot; ng-model=&quot;selection&quot;&gt;
+&lt;/p&gt;
+
+&lt;!-- bind scope.selection to ngSelect model --&gt;
+&lt;div class=&quot;row example&quot; ng-select=&quot;selection&quot;&gt;
+  &lt;div class=&quot;col-xs-12&quot;&gt;
+    
+    &lt;!-- five images with number as option value --&gt;
+    &lt;!-- add &quot;selected&quot; class on option selected --&gt;
+    &lt;img class=&quot;img-polaroid img-circle&quot; 
+         ng-repeat=&quot;num in [1, 2, 3, 4, 5] track by $id($index)&quot; 
+         ng-src=&quot;http://lorempixel.com/100/100/sports/{{ num }}&quot;
+         ng-select-option=&quot;{{ num }}&quot; 
+         select-class=&quot;{'selected': $optSelected}&quot;&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
 </div>
 
 <small><strong>Django templates</strong> (ref: <a href="http://softwaremaniacs.org/media/soft/highlight/test.html">highlight.js demo page</a>)</small>
