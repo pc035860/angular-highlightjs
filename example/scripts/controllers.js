@@ -11,6 +11,12 @@ function ExampleCtrl($scope,   $location,   $templateCache,   exampleRoutes) {
   $scope.source = null;
   $scope.subSource = null;
 
+  $scope.getNavName = function (link) {
+    if (link.indexOf('hljs-') < 0) {
+      return 'basic';
+    }
+    return link.substr(1).replace('hljs-', '');
+  };
 
   $scope.toggleSource = function (target) {
     target = target || 'source';
