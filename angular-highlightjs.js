@@ -1,6 +1,25 @@
 /*global angular*/
-angular.module('hljs', [])
+(function (module) {
 
+var dirHljs, dirLanguageFactory, dirSourceFactory, dirIncludeFactory;
+
+function shouldHighlightStatics(attrs) {
+  var should = true;
+  angular.forEach([
+    'source', 'include'
+  ], function (name) {
+    if (attrs[name]) {
+      should = false;
+    }
+  });
+  return should;
+}
+
+module
+
+/**
+ * hljsService service
+ */
 .provider('hljsService', function () {
   var _hljsOptions = {};
 
@@ -18,12 +37,18 @@ angular.module('hljs', [])
   };
 })
 
+/**
+ * hljsCache service
+ */
 .factory('hljsCache', [
          '$cacheFactory',
 function ($cacheFactory) {
   return $cacheFactory('hljsCache');
 }])
 
+/**
+ * HljsCtrl controller
+ */
 .controller('HljsCtrl', [
                   'hljsCache', 'hljsService',
 function HljsCtrl (hljsCache,   hljsService) {
@@ -106,9 +131,12 @@ function HljsCtrl (hljsCache,   hljsService) {
         glue = "!angular-highlightjs!";
     return args.join(glue);
   };
-}])
+}]);
 
-.directive('hljs', ['$compile', '$parse', function ($compile, $parse) {
+/**
+ * hljs directive
+ */
+dirHljs = ['$compile', '$parse', function ($compile, $parse) {
   return {
     restrict: 'EA',
     controller: 'HljsCtrl',
@@ -142,8 +170,7 @@ function HljsCtrl (hljsCache,   hljsService) {
           });
         }
 
-        if ((staticHTML || staticText) && 
-            angular.isUndefined(iAttrs.source) && angular.isUndefined(iAttrs.include)) {
+        if ((staticHTML || staticText) && shouldHighlightStatics(iAttrs)) {
 
           var code;
 
@@ -173,132 +200,166 @@ function HljsCtrl (hljsCache,   hljsService) {
       };
     }
   };
-}])
+}];
 
-.directive('language', [function () {
-  return {
-    require: 'hljs',
-    restrict: 'A',
-    link: function (scope, iElm, iAttrs, ctrl) {
-      iAttrs.$observe('language', function (lang) {
-        if (angular.isDefined(lang)) {
-          ctrl.setLanguage(lang);
-        }
-      });
-    }
-  };
-}])
-
-.directive('source', ['$compile', '$parse', function ($compile, $parse) {
-  return {
-    require: 'hljs',
-    restrict: 'A',
-    link: function(scope, iElm, iAttrs, ctrl) {
-      var compileCheck;
-
-      if (angular.isDefined(iAttrs.compile)) {
-        compileCheck = $parse(iAttrs.compile);
-      }
-
-      scope.$watch(iAttrs.source, function (newCode, oldCode) {
-        if (newCode) {
-          ctrl.highlight(newCode);
-
-          // Check if the highlight result needs to be compiled
-          if (compileCheck && compileCheck(scope)) {
-            // compile the new DOM and link it to the current scope.
-            // NOTE: we only compile .childNodes so that
-            // we don't get into infinite loop compiling ourselves
-            $compile(iElm.find('code').contents())(scope);
+/**
+ * language directive
+ */
+dirLanguageFactory = function (dirName) {
+  return [function () {
+    return {
+      require: '?hljs',
+      restrict: 'A',
+      link: function (scope, iElm, iAttrs, ctrl) {
+        if (!ctrl) {
+          return;
+        }      
+        iAttrs.$observe(dirName, function (lang) {
+          if (angular.isDefined(lang)) {
+            ctrl.setLanguage(lang);
           }
-        }
-        else {
-          ctrl.clear();
-        }
-      });
-    }
-  };
-}])
+        });
+      }
+    };
+  }];
+};
 
-.directive('include', [
-         '$http', '$templateCache', '$q', '$compile', '$parse',
-function ($http,   $templateCache,   $q,   $compile,   $parse) {
-  return {
-    require: 'hljs',
-    restrict: 'A',
-    compile: function(tElm, tAttrs, transclude) {
-      var srcExpr = tAttrs.include;
+/**
+ * source directive
+ */
+dirSourceFactory = function (dirName) {
+  return ['$compile', '$parse', function ($compile, $parse) {
+    return {
+      require: '?hljs',
+      restrict: 'A',
+      link: function(scope, iElm, iAttrs, ctrl) {
+        var compileCheck;
 
-      return function postLink(scope, iElm, iAttrs, ctrl) {
-        var changeCounter = 0, compileCheck;
+        if (!ctrl) {
+          return;
+        }
 
         if (angular.isDefined(iAttrs.compile)) {
           compileCheck = $parse(iAttrs.compile);
         }
 
-        scope.$watch(srcExpr, function (src) {
-          var thisChangeId = ++changeCounter;
+        scope.$watch(iAttrs[dirName], function (newCode, oldCode) {
+          if (newCode) {
+            ctrl.highlight(newCode);
 
-          if (src && angular.isString(src)) {
-            var templateCachePromise, dfd;
-
-            templateCachePromise = $templateCache.get(src);
-            if (!templateCachePromise) {
-              dfd = $q.defer();
-              $http.get(src, {
-                cache: $templateCache,
-                transformResponse: function(data, headersGetter) {
-                  // Return the raw string, so $http doesn't parse it
-                  // if it's json.
-                  return data;
-                }
-              }).success(function (code) {
-                if (thisChangeId !== changeCounter) {
-                  return;
-                }
-                dfd.resolve(code);
-              }).error(function() {
-                if (thisChangeId === changeCounter) {
-                  ctrl.clear();
-                }
-                dfd.resolve();
-              });
-              templateCachePromise = dfd.promise;
+            // Check if the highlight result needs to be compiled
+            if (compileCheck && compileCheck(scope)) {
+              // compile the new DOM and link it to the current scope.
+              // NOTE: we only compile .childNodes so that
+              // we don't get into infinite loop compiling ourselves
+              $compile(iElm.find('code').contents())(scope);
             }
-
-            $q.when(templateCachePromise)
-            .then(function (code) {
-              if (!code) {
-                return;
-              }
-
-              // $templateCache from $http
-              if (angular.isArray(code)) {
-                // 1.1.5
-                code = code[1];
-              }
-              else if (angular.isObject(code)) {
-                // 1.0.7
-                code = code.data;
-              }
-
-              code = code.replace(/^(\r\n|\r|\n)/m, '');
-              ctrl.highlight(code);
-
-              // Check if the highlight result needs to be compiled
-              if (compileCheck && compileCheck(scope)) {
-                // compile the new DOM and link it to the current scope.
-                // NOTE: we only compile .childNodes so that
-                // we don't get into infinite loop compiling ourselves
-                $compile(iElm.find('code').contents())(scope);
-              }
-            });
           }
           else {
             ctrl.clear();
           }
         });
+      }
+    };
+  }];
+};
+
+/**
+ * include directive
+ */
+dirIncludeFactory = function (dirName) {
+  return [
+             '$http', '$templateCache', '$q', '$compile', '$parse',
+    function ($http,   $templateCache,   $q,   $compile,   $parse) {
+      return {
+        require: '?hljs',
+        restrict: 'A',
+        compile: function(tElm, tAttrs, transclude) {
+          var srcExpr = tAttrs[dirName];
+
+          return function postLink(scope, iElm, iAttrs, ctrl) {
+            var changeCounter = 0, compileCheck;
+
+            if (!ctrl) {
+              return;
+            }
+
+            if (angular.isDefined(iAttrs.compile)) {
+              compileCheck = $parse(iAttrs.compile);
+            }
+
+            scope.$watch(srcExpr, function (src) {
+              var thisChangeId = ++changeCounter;
+
+              if (src && angular.isString(src)) {
+                var templateCachePromise, dfd;
+
+                templateCachePromise = $templateCache.get(src);
+                if (!templateCachePromise) {
+                  dfd = $q.defer();
+                  $http.get(src, {
+                    cache: $templateCache,
+                    transformResponse: function(data, headersGetter) {
+                      // Return the raw string, so $http doesn't parse it
+                      // if it's json.
+                      return data;
+                    }
+                  }).success(function (code) {
+                    if (thisChangeId !== changeCounter) {
+                      return;
+                    }
+                    dfd.resolve(code);
+                  }).error(function() {
+                    if (thisChangeId === changeCounter) {
+                      ctrl.clear();
+                    }
+                    dfd.resolve();
+                  });
+                  templateCachePromise = dfd.promise;
+                }
+
+                $q.when(templateCachePromise)
+                .then(function (code) {
+                  if (!code) {
+                    return;
+                  }
+
+                  // $templateCache from $http
+                  if (angular.isArray(code)) {
+                    // 1.1.5
+                    code = code[1];
+                  }
+                  else if (angular.isObject(code)) {
+                    // 1.0.7
+                    code = code.data;
+                  }
+
+                  code = code.replace(/^(\r\n|\r|\n)/m, '');
+                  ctrl.highlight(code);
+
+                  // Check if the highlight result needs to be compiled
+                  if (compileCheck && compileCheck(scope)) {
+                    // compile the new DOM and link it to the current scope.
+                    // NOTE: we only compile .childNodes so that
+                    // we don't get into infinite loop compiling ourselves
+                    $compile(iElm.find('code').contents())(scope);
+                  }
+                });
+              }
+              else {
+                ctrl.clear();
+              }
+            });
+          };
+        }
       };
-    }
-  };
-}]);
+  }];
+};
+
+module
+.directive('hljs', dirHljs)
+.directive('language', dirLanguageFactory('language'))
+.directive('source', dirSourceFactory('source'))
+.directive('include', dirIncludeFactory('include'));
+
+})(angular.module('hljs', []));
