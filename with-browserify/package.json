@@ -5,7 +5,7 @@
   "main": "./scripts/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify . -d -o scripts/bundle.js"
+    "build": "browserify . -o scripts/bundle.js"
   },
   "author": "",
   "license": "ISC",
