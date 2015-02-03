@@ -1,5 +1,5 @@
 /*! angular-highlightjs
-version: 0.3.3
+version: 0.4.0
 build date: 2015-02-03
 author: Robin Fan
 https://github.com/pc035860/angular-highlightjs.git */
@@ -10,9 +10,7 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
 }
 
 (function (window, angular, undefined) {
-/*jshint globalstrict: true*/
 /*global angular*/
-'use strict';
 
 function shouldHighlightStatics(attrs) {
   var should = true;
