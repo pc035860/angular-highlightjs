@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+
+  <head>
+    <meta charset="utf-8" />
+    <title>JSON pretty print with AngularJS</title>
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/tomorrow.min.css">
+    <link rel="stylesheet" href="style.css" />
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+
+    <script src="scripts/bundle.js"></script>    
+  </head>
+
+  <body ng-controller="MainCtrl">
+    <div class="container">
+      <h3>JSON pretty print with AngularJS &nbsp;<small>powered by <a href="https://github.com/pc035860/angular-highlightjs" target="_blank">angular-highlightjs</a></small></h3>
+      <div class="row">
+        <div class="col-sm-6 col-12">
+          <h4 class="taller">JSON or Object expression</h4>
+          <div>
+            <textarea class="form-control" ng-model="editObject"></textarea>
+          </div>
+        </div>
+        <div class="col-sm-6 col-12">
+          <h4>
+            Pretty print &nbsp; &nbsp;
+            <span class="text-muted">tab width: <input type="text" class="form-control" ng-model="tabWidth" maxlength="1" /></span>
+          </h4>
+          <div hljs source="toPrettyJSON(editObject, tabWidth)"></div>
+        </div>
+      </div>
+  
+    </div>
+    
+  </body>
+
+</html>

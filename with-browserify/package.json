@@ -1,0 +1,27 @@
+{
+  "name": "with-browserify",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./scripts/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify . -o scripts/bundle.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "angular": "^1.3.11",
+    "angular-highlightjs": "^0.4.0",
+    "browserify-shim": "^3.8.2"
+  },
+
+  "browserify": {
+    "transform": [ "browserify-shim" ]
+  },
+  "browser": {
+	"angular": "./node_modules/angular/angular.min.js"
+  },
+  "browserify-shim": {
+  	"angular": "angular"
+  }
+}

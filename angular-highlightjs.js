@@ -1,7 +1,16 @@
-/*global angular*/
-(function (module) {
+/*! angular-highlightjs
+version: 0.4.0
+build date: 2015-02-03
+author: Robin Fan
+https://github.com/pc035860/angular-highlightjs.git */
 
-var dirHljs, dirLanguageFactory, dirSourceFactory, dirIncludeFactory;
+/* commonjs package manager support (eg componentjs) */
+if (typeof module !== "undefined" && typeof exports !== "undefined" && module.exports === exports){
+  module.exports = 'hljs';
+}
+
+(function (window, angular, undefined) {
+/*global angular*/
 
 function shouldHighlightStatics(attrs) {
   var should = true;
@@ -15,12 +24,13 @@ function shouldHighlightStatics(attrs) {
   return should;
 }
 
-module
+
+var ngModule = angular.module('hljs', []);
 
 /**
  * hljsService service
  */
-.provider('hljsService', function () {
+ngModule.provider('hljsService', function () {
   var _hljsOptions = {};
 
   return {
@@ -35,21 +45,21 @@ module
       return $window.hljs;
     }]
   };
-})
+});
 
 /**
  * hljsCache service
  */
-.factory('hljsCache', [
+ngModule.factory('hljsCache', [
          '$cacheFactory',
 function ($cacheFactory) {
   return $cacheFactory('hljsCache');
-}])
+}]);
 
 /**
  * HljsCtrl controller
  */
-.controller('HljsCtrl', [
+ngModule.controller('HljsCtrl', [
                   'hljsCache', 'hljsService',
 function HljsCtrl (hljsCache,   hljsService) {
   var ctrl = this;
@@ -133,10 +143,13 @@ function HljsCtrl (hljsCache,   hljsService) {
   };
 }]);
 
+
+var hljsDir, languageDirFactory, sourceDirFactory, includeDirFactory;
+
 /**
  * hljs directive
  */
-dirHljs = ['$compile', '$parse', function ($compile, $parse) {
+hljsDir = ['$compile', '$parse', function ($compile, $parse) {
   return {
     restrict: 'EA',
     controller: 'HljsCtrl',
@@ -205,7 +218,7 @@ dirHljs = ['$compile', '$parse', function ($compile, $parse) {
 /**
  * language directive
  */
-dirLanguageFactory = function (dirName) {
+languageDirFactory = function (dirName) {
   return [function () {
     return {
       require: '?hljs',
@@ -227,7 +240,7 @@ dirLanguageFactory = function (dirName) {
 /**
  * source directive
  */
-dirSourceFactory = function (dirName) {
+sourceDirFactory = function (dirName) {
   return ['$compile', '$parse', function ($compile, $parse) {
     return {
       require: '?hljs',
@@ -267,7 +280,7 @@ dirSourceFactory = function (dirName) {
 /**
  * include directive
  */
-dirIncludeFactory = function (dirName) {
+includeDirFactory = function (dirName) {
   return [
              '$http', '$templateCache', '$q', '$compile', '$parse',
     function ($http,   $templateCache,   $q,   $compile,   $parse) {
@@ -356,10 +369,12 @@ dirIncludeFactory = function (dirName) {
   }];
 };
 
-module
-.directive('hljs', dirHljs)
-.directive('language', dirLanguageFactory('language'))
-.directive('source', dirSourceFactory('source'))
-.directive('include', dirIncludeFactory('include'));
-
-})(angular.module('hljs', []));
+/**
+ * Add directives
+ */
+ngModule
+.directive('hljs', hljsDir)
+.directive('language', languageDirFactory('language'))
+.directive('source', sourceDirFactory('source'))
+.directive('include', includeDirFactory('include'));
+})(window, window.angular);
