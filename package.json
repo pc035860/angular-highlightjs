@@ -16,7 +16,10 @@
     "highlight.js",
     "angular-highlightjs"
   ],
-  "author": "Robin Fan",
+  "author": {
+  	"name": "Chih-Hsuan Fan",
+  	"email": "pc035860@gmail.com"
+  },
   "license": "MIT",
   "readmeFilename": "README.md",
   "devDependencies": {
