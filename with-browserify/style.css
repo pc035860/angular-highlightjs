@@ -1,0 +1,26 @@
+.taller {
+  line-height: 28px;
+}
+
+textarea {
+  width: 100%;
+  
+  min-height: 500px;
+}
+
+.btn {
+
+  padding: 3px 12px;
+  
+}
+
+pre {
+  background-color: transparent;
+  padding: 0;
+}
+
+.text-muted input[type="text"] {
+  width: 37px;
+  font-size: 1em;
+  display: inline-block;
+}

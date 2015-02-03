@@ -1,0 +1,10 @@
+{
+	"curly": true,
+	"multistr": true,
+	"expr": true,
+	"boss": true,
+	"undef": true,
+	"predef": [
+		"require", "define", "escape", "module"
+	]
+}
