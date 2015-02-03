@@ -1,7 +1,7 @@
 /*! angular-highlightjs
 version: 0.4.0
 build date: 2015-02-03
-author: Robin Fan
+author: Chih-Hsuan Fan
 https://github.com/pc035860/angular-highlightjs.git */
 
 /* commonjs package manager support (eg componentjs) */

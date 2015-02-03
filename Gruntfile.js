@@ -1,18 +1,21 @@
 module.exports = function(grunt) {
   grunt.initConfig({
     modulename: 'hljs',
-    builddir: 'build',
     pkg: grunt.file.readJSON('package.json'),
+    dir: {
+      src: 'src',
+      build: 'build'
+    },
     meta: {
       banner: 
         '/*! <%= pkg.name %>\n' + 
         'version: <%= pkg.version %>\n' +
         'build date: <%= grunt.template.today("yyyy-mm-dd") %>\n' + 
-        'author: <%= pkg.author %>\n' + 
+        'author: <%= pkg.author.name %>\n' + 
         '<%= pkg.repository.url %> */'
     },
     jshint: {
-      beforeuglify: ['<%= pkg.name %>.js'],
+      beforeuglify: ['<%= dir.src %>/<%= pkg.name %>.js'],
       gruntfile: ['Gruntfile.js']
     },
     concat: {
@@ -26,8 +29,8 @@ module.exports = function(grunt) {
         footer: '})(window, window.angular);'
       },
       build: {
-        src: '<%= pkg.name %>.js',
-        dest: '<%= builddir %>/<%= pkg.name %>.js'
+        src: '<%= dir.src %>/<%= pkg.name %>.js',
+        dest: '<%= dir.build %>/<%= pkg.name %>.js'
       }
     },
     uglify: {
@@ -37,8 +40,16 @@ module.exports = function(grunt) {
         banner: '<%= meta.banner %>\n'
       },
       build: {
-        src: '<%= builddir %>/<%= pkg.name %>.js',
-        dest: '<%= builddir %>/<%= pkg.name %>.min.js'
+        src: '<%= dir.build %>/<%= pkg.name %>.js',
+        dest: '<%= dir.build %>/<%= pkg.name %>.min.js'
+      }
+    },
+    copy: {
+      build: {
+        expand: true,
+        flatten: true,
+        src: '<%= dir.build %>/*',
+        dest: '.'
       }
     },
     watch: {
@@ -47,7 +58,7 @@ module.exports = function(grunt) {
         tasks: ['jshint:gruntfile'],
       },
       src: {
-        files: '<%= pkg.name %>.js',
+        files: '<%= dir.src %>/<%= pkg.name %>.js',
         tasks: ['default'],
       }
     },
@@ -67,7 +78,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
-  grunt.registerTask('default', ['jshint:beforeuglify', 'concat:build', 'uglify:build']);
+  grunt.registerTask('default', [
+    'jshint:beforeuglify',
+    'concat:build', 'uglify:build', 'copy:build'
+  ]);
 };
 

@@ -17,8 +17,8 @@
     "angular-highlightjs"
   ],
   "author": {
-  	"name": "Chih-Hsuan Fan",
-  	"email": "pc035860@gmail.com"
+    "name": "Chih-Hsuan Fan",
+    "email": "pc035860@gmail.com"
   },
   "license": "MIT",
   "readmeFilename": "README.md",
@@ -28,6 +28,7 @@
     "grunt-contrib-jshint": "~0.11.0",
     "grunt-contrib-watch": "~0.6.0",
     "grunt-contrib-connect": "~0.9.0",
-    "grunt-contrib-concat": "^0.5.0"
+    "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-copy": "^0.7.0"
   }
 }

@@ -1,15 +1,3 @@
-/*! angular-highlightjs
-version: 0.4.0
-build date: 2015-02-03
-author: Chih-Hsuan Fan
-https://github.com/pc035860/angular-highlightjs.git */
-
-/* commonjs package manager support (eg componentjs) */
-if (typeof module !== "undefined" && typeof exports !== "undefined" && module.exports === exports){
-  module.exports = 'hljs';
-}
-
-(function (window, angular, undefined) {
 /*global angular*/
 
 function shouldHighlightStatics(attrs) {
@@ -377,4 +365,3 @@ ngModule
 .directive('language', languageDirFactory('language'))
 .directive('source', sourceDirFactory('source'))
 .directive('include', includeDirFactory('include'));
-})(window, window.angular);
