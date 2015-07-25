@@ -21,12 +21,18 @@ module.exports = function(grunt) {
     concat: {
       options: {
         banner: '<%= meta.banner %>\n\n'+
-                '/* commonjs package manager support (eg componentjs) */\n'+
-                'if (typeof module !== "undefined" && typeof exports !== "undefined" && module.exports === exports){\n'+
-                '  module.exports = \'<%= modulename %>\';\n'+
-                '}\n\n'+
-                '(function (window, angular, undefined) {\n',
-        footer: '})(window, window.angular);'
+                '(function (root, factory) {\n'+
+                '  if (typeof define === "function" && define.amd) {\n'+
+                '    define(["angular", "hljs"], factory);\n'+
+                '  } else if (typeof module === "object" && module.exports) {\n'+
+                '    module.exports = factory(require("angular"), require("highlight.js"));\n'+
+                '  } else {\n'+
+                '    root.returnExports = factory(root.angular, root.hljs);\n'+
+                '  }\n'+
+                '}(this, function (angular, hljs) {\n\n',
+        footer: '\n\n'+
+                '  return "<%= modulename %>";\n'+
+                '}));'
       },
       build: {
         src: '<%= dir.src %>/<%= pkg.name %>.js',
