@@ -16,7 +16,6 @@
     "tests"
   ],
   "dependencies": {
-  	"highlightjs": "~8",
   	"angular" : ">1.0.8"
   },
   "devDependencies": {}
