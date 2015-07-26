@@ -1,12 +1,12 @@
 /*! angular-highlightjs
 version: 0.4.1
-build date: 2015-07-25
+build date: 2015-07-27
 author: Chih-Hsuan Fan
 https://github.com/pc035860/angular-highlightjs.git */
 
 (function (root, factory) {
   if (typeof define === "function" && define.amd) {
-    define(["angular", "hljs"], factory);
+    define(["angular", "highlight.js"], factory);
   } else if (typeof module === "object" && module.exports) {
     module.exports = factory(require("angular"), require("highlight.js"));
   } else {

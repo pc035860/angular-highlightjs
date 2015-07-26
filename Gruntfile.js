@@ -1,7 +1,20 @@
+var config = {
+  instanceName: {
+    highlightjs: 'hljs',
+    angular: 'angular'
+  },
+  npmName: {
+    highlightjs: 'highlight.js',
+    angular: 'angular'
+  },
+  moduleName: 'hljs'
+};
+
 module.exports = function(grunt) {
   grunt.initConfig({
-    modulename: 'hljs',
+    config: config,
     pkg: grunt.file.readJSON('package.json'),
+
     dir: {
       src: 'src',
       build: 'build'
@@ -23,15 +36,15 @@ module.exports = function(grunt) {
         banner: '<%= meta.banner %>\n\n'+
                 '(function (root, factory) {\n'+
                 '  if (typeof define === "function" && define.amd) {\n'+
-                '    define(["angular", "hljs"], factory);\n'+
+                '    define(["<%= config.npmName.angular %>", "<%= config.npmName.highlightjs %>"], factory);\n'+
                 '  } else if (typeof module === "object" && module.exports) {\n'+
-                '    module.exports = factory(require("angular"), require("highlight.js"));\n'+
+                '    module.exports = factory(require("<%= config.npmName.angular %>"), require("<%= config.npmName.highlightjs %>"));\n'+
                 '  } else {\n'+
-                '    root.returnExports = factory(root.angular, root.hljs);\n'+
+                '    root.returnExports = factory(root.<%= config.instanceName.angular %>, root.<%= config.instanceName.highlightjs %>);\n'+
                 '  }\n'+
                 '}(this, function (angular, hljs) {\n\n',
         footer: '\n\n'+
-                '  return "<%= modulename %>";\n'+
+                '  return "<%= config.moduleName %>";\n'+
                 '}));'
       },
       build: {
