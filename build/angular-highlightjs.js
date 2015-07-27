@@ -1,5 +1,5 @@
 /*! angular-highlightjs
-version: 0.4.2
+version: 0.4.3
 build date: 2015-07-28
 author: Chih-Hsuan Fan
 https://github.com/pc035860/angular-highlightjs.git */
@@ -44,6 +44,7 @@ ngModule.provider('hljsService', function () {
       return angular.copy(_hljsOptions);
     },
     $get: function () {
+      (hljs.configure || angular.noop)(_hljsOptions);
       return hljs;
     }
   };

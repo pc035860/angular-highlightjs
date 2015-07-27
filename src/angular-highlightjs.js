@@ -28,6 +28,7 @@ ngModule.provider('hljsService', function () {
       return angular.copy(_hljsOptions);
     },
     $get: function () {
+      (hljs.configure || angular.noop)(_hljsOptions);
       return hljs;
     }
   };
