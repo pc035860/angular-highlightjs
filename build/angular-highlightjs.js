@@ -1,6 +1,6 @@
 /*! angular-highlightjs
-version: 0.4.1
-build date: 2015-07-27
+version: 0.4.2
+build date: 2015-07-28
 author: Chih-Hsuan Fan
 https://github.com/pc035860/angular-highlightjs.git */
 
