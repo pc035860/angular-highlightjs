@@ -38,13 +38,15 @@ angular.module('myApp', ['hljs']);
 ## Install with npm
 
 ```sh
+npm install highlight.js
 npm install angular-highlightjs
 ```
 
 ## Install with Bower
 
+There's currently no official bower package of highlight.js ([see here](https://github.com/isagalaev/highlight.js/issues/182#issuecomment-29251147)). You should either build highlight.js yourself or use the [pre-built one on cdnjs](https://cdnjs.com/libraries/highlight.js).
+
 ```sh
-# install angular-highlightjs & highlightjs
 bower install angular-highlightjs
 ```
 
