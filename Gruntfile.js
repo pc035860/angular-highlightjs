@@ -7,6 +7,10 @@ var config = {
     highlightjs: 'highlight.js',
     angular: 'angular'
   },
+  amdName: {
+    highlightjs: 'hljs',
+    angular: 'angular'
+  },
   moduleName: 'hljs'
 };
 
@@ -35,10 +39,10 @@ module.exports = function(grunt) {
       options: {
         banner: '<%= meta.banner %>\n\n'+
                 '(function (root, factory) {\n'+
-                '  if (typeof define === "function" && define.amd) {\n'+
-                '    define(["<%= config.npmName.angular %>", "<%= config.npmName.highlightjs %>"], factory);\n'+
-                '  } else if (typeof module === "object" && module.exports) {\n'+
+                '  if (typeof exports === "object" || (typeof module === "object" && module.exports)) {\n'+
                 '    module.exports = factory(require("<%= config.npmName.angular %>"), require("<%= config.npmName.highlightjs %>"));\n'+
+                '  } else if (typeof define === "function" && define.amd) {\n'+
+                '    define(["<%= config.amdName.angular %>", "<%= config.amdName.highlightjs %>"], factory);\n'+
                 '  } else {\n'+
                 '    root.returnExports = factory(root.<%= config.instanceName.angular %>, root.<%= config.instanceName.highlightjs %>);\n'+
                 '  }\n'+
@@ -55,7 +59,7 @@ module.exports = function(grunt) {
     uglify: {
       options: {
         mangle: true,
-        compress: true,
+        compress: {},
         banner: '<%= meta.banner %>\n'
       },
       build: {

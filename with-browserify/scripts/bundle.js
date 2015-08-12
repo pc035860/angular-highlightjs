@@ -1,15 +1,15 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*! angular-highlightjs
-version: 0.4.1
-build date: 2015-07-25
+version: 0.4.3
+build date: 2015-08-12
 author: Chih-Hsuan Fan
 https://github.com/pc035860/angular-highlightjs.git */
 
 (function (root, factory) {
-  if (typeof define === "function" && define.amd) {
-    define(["angular", "hljs"], factory);
-  } else if (typeof module === "object" && module.exports) {
+  if (typeof exports === "object" || (typeof module === "object" && module.exports)) {
     module.exports = factory(require("angular"), require("highlight.js"));
+  } else if (typeof define === "function" && define.amd) {
+    define(["angular", "hljs"], factory);
   } else {
     root.returnExports = factory(root.angular, root.hljs);
   }
@@ -45,6 +45,7 @@ ngModule.provider('hljsService', function () {
       return angular.copy(_hljsOptions);
     },
     $get: function () {
+      (hljs.configure || angular.noop)(_hljsOptions);
       return hljs;
     }
   };
