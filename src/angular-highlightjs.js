@@ -206,17 +206,31 @@ hljsDir = ['$compile', '$parse', function ($compile, $parse) {
  * language directive
  */
 languageDirFactory = function (dirName) {
-  return [function () {
+  return ['$compile', '$parse', function ($compile, $parse) {
     return {
       require: '?hljs',
       restrict: 'A',
       link: function (scope, iElm, iAttrs, ctrl) {
         if (!ctrl) {
           return;
-        }      
+        }
+        
+        var compileCheck;
+
+        if (angular.isDefined(iAttrs.compile)) {
+          compileCheck = $parse(iAttrs.compile);
+        }
+
         iAttrs.$observe(dirName, function (lang) {
           if (angular.isDefined(lang)) {
             ctrl.setLanguage(lang);
+
+            if (compileCheck && compileCheck(scope)) {
+              // compile the new DOM and link it to the current scope.
+              // NOTE: we only compile .childNodes so that
+              // we don't get into infinite loop compiling ourselves
+              $compile(iElm.find('code').contents())(scope);
+            }
           }
         });
       }
