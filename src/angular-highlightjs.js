@@ -58,6 +58,11 @@ function HljsCtrl (hljsCache,   hljsService,   $interpolate,   $window,   $log) 
       _stopInterpolateWatch = null,
       _hlCb = null;
 
+  var RE_INTERPOLATION_STR = escapeRe($interpolate.startSymbol()) +
+    '((.|\\s)+?)' + escapeRe($interpolate.endSymbol());
+
+  var INTERPOLATION_SYMBOL = '∫';
+
   ctrl.init = function (codeElm) {
     _elm = codeElm;
   };
@@ -83,41 +88,50 @@ function HljsCtrl (hljsCache,   hljsService,   $interpolate,   $window,   $log) 
   };
 
   ctrl._highlight = function (code) {
-    $log.debug('# ctrl._highlight #');
-
     if (!_elm) {
       return;
     }
 
-    var res, cacheKey;
+    var res, cacheKey, interpolateData;
 
-    _code = code;
+    _code = code;  // preserve raw code
+
+    if (_interpolateScope) {
+      interpolateData = extractInterpolations(code);
+      code = interpolateData.code;
+    }
 
     if (_lang) {
-      // language specified
-      cacheKey = ctrl._cacheKey(_lang, _code);
+      // cache key: language, scope, code
+      cacheKey = ctrl._cacheKey(_lang, !!_interpolateScope, code);
       res = hljsCache.get(cacheKey);
 
       if (!res) {
-        res = hljsService.highlight(_lang, hljsService.fixMarkup(_code), true);
+        res = hljsService.highlight(_lang, hljsService.fixMarkup(code), true);
         hljsCache.put(cacheKey, res);
       }
     }
     else {
-      // language auto-detect
-      cacheKey = ctrl._cacheKey(_code);
+      // cache key: scope, code
+      cacheKey = ctrl._cacheKey(!!_interpolateScope, code);
       res = hljsCache.get(cacheKey);
 
       if (!res) {
-        res = hljsService.highlightAuto(hljsService.fixMarkup(_code));
+        res = hljsService.highlightAuto(hljsService.fixMarkup(code));
         hljsCache.put(cacheKey, res);
       }
     }
 
+    code = res.value;
+
     if (_interpolateScope) {
       (_stopInterpolateWatch||angular.noop)();
 
-      var interpolateFn = $interpolate(res.value);
+      if (interpolateData) {
+        code = recoverInterpolations(code, interpolateData.tokens);
+      }
+
+      var interpolateFn = $interpolate(code);
       _stopInterpolateWatch = _interpolateScope.$watch(interpolateFn, function (newVal, oldVal) {
         if (newVal !== oldVal) {
           _elm.html(newVal);
@@ -126,7 +140,7 @@ function HljsCtrl (hljsCache,   hljsService,   $interpolate,   $window,   $log) 
       _elm.html(interpolateFn(_interpolateScope));
     }
     else {
-      _elm.html(res.value);
+      _elm.html(code);
     }
 
     // language as class on the <code> tag
@@ -136,7 +150,7 @@ function HljsCtrl (hljsCache,   hljsService,   $interpolate,   $window,   $log) 
       _hlCb();
     }
   };
-  ctrl.highlight = debounce(ctrl._highlight, 20, true);
+  ctrl.highlight = debounce(ctrl._highlight, 17);
 
   ctrl.clear = function () {
     if (!_elm) {
@@ -178,6 +192,49 @@ function HljsCtrl (hljsCache,   hljsService,   $interpolate,   $window,   $log) 
         func.apply(context, args);
       }
     };
+  }
+
+  // Ref: http://stackoverflow.com/questions/3115150/how-to-escape-regular-expression-special-characters-using-javascript
+  function escapeRe(text, asString) {
+    var replacement = asString ? "\\\\$&" : "\\$&";
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, replacement);
+  }
+
+  function extractInterpolations(code) {
+    var interpolateTokens = [],
+        re = new RegExp(RE_INTERPOLATION_STR, 'g'),
+        newCode = '',
+        lastIndex = 0,
+        arr;
+
+    while ((arr = re.exec(code)) !== null) {
+      newCode += code.substring(lastIndex, arr.index) + INTERPOLATION_SYMBOL;
+      lastIndex = arr.index + arr[0].length;
+      interpolateTokens.push(arr[0]);
+    }
+
+    newCode += code.substr(lastIndex);
+
+    return {
+      code: newCode,
+      tokens: interpolateTokens
+    };
+  }
+
+  function recoverInterpolations(code, tokens) {
+    var re = new RegExp(INTERPOLATION_SYMBOL, 'g'),
+        newCode = '',
+        lastIndex = 0,
+        arr;
+
+    while ((arr = re.exec(code)) !== null) {
+      newCode += code.substring(lastIndex, arr.index ) + tokens.shift();
+      lastIndex = arr.index + arr[0].length;
+    }
+
+    newCode += code.substr(lastIndex);
+
+    return newCode;
   }
 }]);
 
