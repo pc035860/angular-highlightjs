@@ -47,17 +47,32 @@ function ($cacheFactory) {
  * HljsCtrl controller
  */
 ngModule.controller('HljsCtrl', [
-                  'hljsCache', 'hljsService',
-function HljsCtrl (hljsCache,   hljsService) {
+                  'hljsCache', 'hljsService', '$interpolate', '$window', '$log',
+function HljsCtrl (hljsCache,   hljsService,   $interpolate,   $window,   $log) {
   var ctrl = this;
 
   var _elm = null,
       _lang = null,
       _code = null,
+      _interpolateScope = false,
+      _stopInterpolateWatch = null,
       _hlCb = null;
+
+  var RE_INTERPOLATION_STR = escapeRe($interpolate.startSymbol()) +
+    '((.|\\s)+?)' + escapeRe($interpolate.endSymbol());
+
+  var INTERPOLATION_SYMBOL = '∫';
 
   ctrl.init = function (codeElm) {
     _elm = codeElm;
+  };
+
+  ctrl.setInterpolateScope = function (scope) {
+    _interpolateScope = scope;
+
+    if (_code) {
+      ctrl.highlight(_code);
+    }
   };
 
   ctrl.setLanguage = function (lang) {
@@ -72,37 +87,62 @@ function HljsCtrl (hljsCache,   hljsService) {
     _hlCb = cb;
   };
 
-  ctrl.highlight = function (code) {
+  ctrl._highlight = function (code) {
     if (!_elm) {
       return;
     }
 
-    var res, cacheKey;
+    var res, cacheKey, interpolateData;
 
-    _code = code;
+    _code = code;  // preserve raw code
+
+    if (_interpolateScope) {
+      interpolateData = extractInterpolations(code);
+      code = interpolateData.code;
+    }
 
     if (_lang) {
-      // language specified
-      cacheKey = ctrl._cacheKey(_lang, _code);
+      // cache key: language, scope, code
+      cacheKey = ctrl._cacheKey(_lang, !!_interpolateScope, code);
       res = hljsCache.get(cacheKey);
 
       if (!res) {
-        res = hljsService.highlight(_lang, hljsService.fixMarkup(_code), true);
+        res = hljsService.highlight(_lang, hljsService.fixMarkup(code), true);
         hljsCache.put(cacheKey, res);
       }
     }
     else {
-      // language auto-detect
-      cacheKey = ctrl._cacheKey(_code);
+      // cache key: scope, code
+      cacheKey = ctrl._cacheKey(!!_interpolateScope, code);
       res = hljsCache.get(cacheKey);
 
       if (!res) {
-        res = hljsService.highlightAuto(hljsService.fixMarkup(_code));
+        res = hljsService.highlightAuto(hljsService.fixMarkup(code));
         hljsCache.put(cacheKey, res);
       }
     }
 
-    _elm.html(res.value);
+    code = res.value;
+
+    if (_interpolateScope) {
+      (_stopInterpolateWatch||angular.noop)();
+
+      if (interpolateData) {
+        code = recoverInterpolations(code, interpolateData.tokens);
+      }
+
+      var interpolateFn = $interpolate(code);
+      _stopInterpolateWatch = _interpolateScope.$watch(interpolateFn, function (newVal, oldVal) {
+        if (newVal !== oldVal) {
+          _elm.html(newVal);
+        }
+      });
+      _elm.html(interpolateFn(_interpolateScope));
+    }
+    else {
+      _elm.html(code);
+    }
+
     // language as class on the <code> tag
     _elm.addClass(res.language);
 
@@ -110,6 +150,7 @@ function HljsCtrl (hljsCache,   hljsService) {
       _hlCb();
     }
   };
+  ctrl.highlight = debounce(ctrl._highlight, 17);
 
   ctrl.clear = function () {
     if (!_elm) {
@@ -121,6 +162,9 @@ function HljsCtrl (hljsCache,   hljsService) {
 
   ctrl.release = function () {
     _elm = null;
+    _interpolateScope = null;
+    (_stopInterpolateWatch||angular.noop)();
+    _stopInterpolateWatch = null;
   };
 
   ctrl._cacheKey = function () {
@@ -128,15 +172,79 @@ function HljsCtrl (hljsCache,   hljsService) {
         glue = "!angular-highlightjs!";
     return args.join(glue);
   };
+
+
+  // http://davidwalsh.name/function-debounce
+  function debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+      var context = this, args = arguments;
+      var later = function() {
+        timeout = null;
+        if (!immediate) {
+          func.apply(context, args);
+        }
+      };
+      var callNow = immediate && !timeout;
+      $window.clearTimeout(timeout);
+      timeout = $window.setTimeout(later, wait);
+      if (callNow) {
+        func.apply(context, args);
+      }
+    };
+  }
+
+  // Ref: http://stackoverflow.com/questions/3115150/how-to-escape-regular-expression-special-characters-using-javascript
+  function escapeRe(text, asString) {
+    var replacement = asString ? "\\\\$&" : "\\$&";
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, replacement);
+  }
+
+  function extractInterpolations(code) {
+    var interpolateTokens = [],
+        re = new RegExp(RE_INTERPOLATION_STR, 'g'),
+        newCode = '',
+        lastIndex = 0,
+        arr;
+
+    while ((arr = re.exec(code)) !== null) {
+      newCode += code.substring(lastIndex, arr.index) + INTERPOLATION_SYMBOL;
+      lastIndex = arr.index + arr[0].length;
+      interpolateTokens.push(arr[0]);
+    }
+
+    newCode += code.substr(lastIndex);
+
+    return {
+      code: newCode,
+      tokens: interpolateTokens
+    };
+  }
+
+  function recoverInterpolations(code, tokens) {
+    var re = new RegExp(INTERPOLATION_SYMBOL, 'g'),
+        newCode = '',
+        lastIndex = 0,
+        arr;
+
+    while ((arr = re.exec(code)) !== null) {
+      newCode += code.substring(lastIndex, arr.index ) + tokens.shift();
+      lastIndex = arr.index + arr[0].length;
+    }
+
+    newCode += code.substr(lastIndex);
+
+    return newCode;
+  }
 }]);
 
 
-var hljsDir, languageDirFactory, sourceDirFactory, includeDirFactory;
+var hljsDir, interpolateDirFactory, languageDirFactory, sourceDirFactory, includeDirFactory;
 
 /**
  * hljs directive
  */
-hljsDir = ['$compile', '$parse', function ($compile, $parse) {
+hljsDir = ['$parse', function ($parse) {
   return {
     restrict: 'EA',
     controller: 'HljsCtrl',
@@ -150,11 +258,7 @@ hljsDir = ['$compile', '$parse', function ($compile, $parse) {
       tElm.html('<pre><code class="hljs"></code></pre>');
 
       return function postLink(scope, iElm, iAttrs, ctrl) {
-        var compileCheck, escapeCheck;
-
-        if (angular.isDefined(iAttrs.compile)) {
-          compileCheck = $parse(iAttrs.compile);
-        }
+        var escapeCheck;
 
         if (angular.isDefined(iAttrs.escape)) {
           escapeCheck = $parse(iAttrs.escape);
@@ -184,14 +288,6 @@ hljsDir = ['$compile', '$parse', function ($compile, $parse) {
           }
 
           ctrl.highlight(code);
-
-          // Check if the highlight result needs to be compiled
-          if (compileCheck && compileCheck(scope)) {
-            // compile the new DOM and link it to the current scope.
-            // NOTE: we only compile .childNodes so that
-            // we don't get into infinite loop compiling ourselves
-            $compile(iElm.find('code').contents())(scope);
-          }
         }
 
         scope.$on('$destroy', function () {
@@ -225,35 +321,43 @@ languageDirFactory = function (dirName) {
 };
 
 /**
+ * interpolate directive
+ */
+interpolateDirFactory = function (dirName) {
+  return [function () {
+    return {
+      require: '?hljs',
+      restrict: 'A',
+      link: function (scope, iElm, iAttrs, ctrl) {
+        if (!ctrl) {
+          return;
+        }
+        scope.$watch(iAttrs[dirName], function (newVal, oldVal) {
+          if (newVal || newVal !== oldVal) {
+            ctrl.setInterpolateScope(newVal ? scope : null);
+          }
+        });
+      }
+    };
+  }];
+};
+
+/**
  * source directive
  */
 sourceDirFactory = function (dirName) {
-  return ['$compile', '$parse', function ($compile, $parse) {
+  return [function () {
     return {
       require: '?hljs',
       restrict: 'A',
       link: function(scope, iElm, iAttrs, ctrl) {
-        var compileCheck;
-
         if (!ctrl) {
           return;
-        }
-
-        if (angular.isDefined(iAttrs.compile)) {
-          compileCheck = $parse(iAttrs.compile);
         }
 
         scope.$watch(iAttrs[dirName], function (newCode, oldCode) {
           if (newCode) {
             ctrl.highlight(newCode);
-
-            // Check if the highlight result needs to be compiled
-            if (compileCheck && compileCheck(scope)) {
-              // compile the new DOM and link it to the current scope.
-              // NOTE: we only compile .childNodes so that
-              // we don't get into infinite loop compiling ourselves
-              $compile(iElm.find('code').contents())(scope);
-            }
           }
           else {
             ctrl.clear();
@@ -269,8 +373,8 @@ sourceDirFactory = function (dirName) {
  */
 includeDirFactory = function (dirName) {
   return [
-             '$http', '$templateCache', '$q', '$compile', '$parse',
-    function ($http,   $templateCache,   $q,   $compile,   $parse) {
+             '$http', '$templateCache', '$q',
+    function ($http,   $templateCache,   $q) {
       return {
         require: '?hljs',
         restrict: 'A',
@@ -278,14 +382,10 @@ includeDirFactory = function (dirName) {
           var srcExpr = tAttrs[dirName];
 
           return function postLink(scope, iElm, iAttrs, ctrl) {
-            var changeCounter = 0, compileCheck;
+            var changeCounter = 0;
 
             if (!ctrl) {
               return;
-            }
-
-            if (angular.isDefined(iAttrs.compile)) {
-              compileCheck = $parse(iAttrs.compile);
             }
 
             scope.$watch(srcExpr, function (src) {
@@ -336,14 +436,6 @@ includeDirFactory = function (dirName) {
 
                   code = code.replace(/^(\r\n|\r|\n)/m, '');
                   ctrl.highlight(code);
-
-                  // Check if the highlight result needs to be compiled
-                  if (compileCheck && compileCheck(scope)) {
-                    // compile the new DOM and link it to the current scope.
-                    // NOTE: we only compile .childNodes so that
-                    // we don't get into infinite loop compiling ourselves
-                    $compile(iElm.find('code').contents())(scope);
-                  }
                 });
               }
               else {
@@ -361,6 +453,8 @@ includeDirFactory = function (dirName) {
  */
 ngModule
 .directive('hljs', hljsDir)
+.directive('interpolate', interpolateDirFactory('interpolate'))
+.directive('compile', interpolateDirFactory('compile'))
 .directive('language', languageDirFactory('language'))
 .directive('source', sourceDirFactory('source'))
 .directive('include', includeDirFactory('include'));
