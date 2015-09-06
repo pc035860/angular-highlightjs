@@ -1,6 +1,6 @@
 /*! angular-highlightjs
 version: 0.4.3
-build date: 2015-08-12
+build date: 2015-09-06
 author: Chih-Hsuan Fan
 https://github.com/pc035860/angular-highlightjs.git */
 
@@ -63,17 +63,27 @@ function ($cacheFactory) {
  * HljsCtrl controller
  */
 ngModule.controller('HljsCtrl', [
-                  'hljsCache', 'hljsService',
-function HljsCtrl (hljsCache,   hljsService) {
+                  'hljsCache', 'hljsService', '$interpolate', '$window', '$log',
+function HljsCtrl (hljsCache,   hljsService,   $interpolate,   $window,   $log) {
   var ctrl = this;
 
   var _elm = null,
       _lang = null,
       _code = null,
+      _interpolateScope = false,
+      _stopInterpolateWatch = null,
       _hlCb = null;
 
   ctrl.init = function (codeElm) {
     _elm = codeElm;
+  };
+
+  ctrl.setInterpolateScope = function (scope) {
+    _interpolateScope = scope;
+
+    if (_code) {
+      ctrl.highlight(_code);
+    }
   };
 
   ctrl.setLanguage = function (lang) {
@@ -88,7 +98,9 @@ function HljsCtrl (hljsCache,   hljsService) {
     _hlCb = cb;
   };
 
-  ctrl.highlight = function (code) {
+  ctrl._highlight = function (code) {
+    $log.debug('# ctrl._highlight #');
+
     if (!_elm) {
       return;
     }
@@ -118,7 +130,21 @@ function HljsCtrl (hljsCache,   hljsService) {
       }
     }
 
-    _elm.html(res.value);
+    if (_interpolateScope) {
+      (_stopInterpolateWatch||angular.noop)();
+
+      var interpolateFn = $interpolate(res.value);
+      _stopInterpolateWatch = _interpolateScope.$watch(interpolateFn, function (newVal, oldVal) {
+        if (newVal !== oldVal) {
+          _elm.html(newVal);
+        }
+      });
+      _elm.html(interpolateFn(_interpolateScope));
+    }
+    else {
+      _elm.html(res.value);
+    }
+
     // language as class on the <code> tag
     _elm.addClass(res.language);
 
@@ -126,6 +152,7 @@ function HljsCtrl (hljsCache,   hljsService) {
       _hlCb();
     }
   };
+  ctrl.highlight = debounce(ctrl._highlight, 20, true);
 
   ctrl.clear = function () {
     if (!_elm) {
@@ -137,6 +164,9 @@ function HljsCtrl (hljsCache,   hljsService) {
 
   ctrl.release = function () {
     _elm = null;
+    _interpolateScope = null;
+    (_stopInterpolateWatch||angular.noop)();
+    _stopInterpolateWatch = null;
   };
 
   ctrl._cacheKey = function () {
@@ -144,15 +174,36 @@ function HljsCtrl (hljsCache,   hljsService) {
         glue = "!angular-highlightjs!";
     return args.join(glue);
   };
+
+
+  // http://davidwalsh.name/function-debounce
+  function debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+      var context = this, args = arguments;
+      var later = function() {
+        timeout = null;
+        if (!immediate) {
+          func.apply(context, args);
+        }
+      };
+      var callNow = immediate && !timeout;
+      $window.clearTimeout(timeout);
+      timeout = $window.setTimeout(later, wait);
+      if (callNow) {
+        func.apply(context, args);
+      }
+    };
+  }
 }]);
 
 
-var hljsDir, languageDirFactory, sourceDirFactory, includeDirFactory;
+var hljsDir, interpolateDirFactory, languageDirFactory, sourceDirFactory, includeDirFactory;
 
 /**
  * hljs directive
  */
-hljsDir = ['$compile', '$parse', function ($compile, $parse) {
+hljsDir = ['$parse', function ($parse) {
   return {
     restrict: 'EA',
     controller: 'HljsCtrl',
@@ -166,11 +217,7 @@ hljsDir = ['$compile', '$parse', function ($compile, $parse) {
       tElm.html('<pre><code class="hljs"></code></pre>');
 
       return function postLink(scope, iElm, iAttrs, ctrl) {
-        var compileCheck, escapeCheck;
-
-        if (angular.isDefined(iAttrs.compile)) {
-          compileCheck = $parse(iAttrs.compile);
-        }
+        var escapeCheck;
 
         if (angular.isDefined(iAttrs.escape)) {
           escapeCheck = $parse(iAttrs.escape);
@@ -200,14 +247,6 @@ hljsDir = ['$compile', '$parse', function ($compile, $parse) {
           }
 
           ctrl.highlight(code);
-
-          // Check if the highlight result needs to be compiled
-          if (compileCheck && compileCheck(scope)) {
-            // compile the new DOM and link it to the current scope.
-            // NOTE: we only compile .childNodes so that
-            // we don't get into infinite loop compiling ourselves
-            $compile(iElm.find('code').contents())(scope);
-          }
         }
 
         scope.$on('$destroy', function () {
@@ -241,35 +280,43 @@ languageDirFactory = function (dirName) {
 };
 
 /**
+ * interpolate directive
+ */
+interpolateDirFactory = function (dirName) {
+  return [function () {
+    return {
+      require: '?hljs',
+      restrict: 'A',
+      link: function (scope, iElm, iAttrs, ctrl) {
+        if (!ctrl) {
+          return;
+        }
+        scope.$watch(iAttrs[dirName], function (newVal, oldVal) {
+          if (newVal || newVal !== oldVal) {
+            ctrl.setInterpolateScope(newVal ? scope : null);
+          }
+        });
+      }
+    };
+  }];
+};
+
+/**
  * source directive
  */
 sourceDirFactory = function (dirName) {
-  return ['$compile', '$parse', function ($compile, $parse) {
+  return [function () {
     return {
       require: '?hljs',
       restrict: 'A',
       link: function(scope, iElm, iAttrs, ctrl) {
-        var compileCheck;
-
         if (!ctrl) {
           return;
-        }
-
-        if (angular.isDefined(iAttrs.compile)) {
-          compileCheck = $parse(iAttrs.compile);
         }
 
         scope.$watch(iAttrs[dirName], function (newCode, oldCode) {
           if (newCode) {
             ctrl.highlight(newCode);
-
-            // Check if the highlight result needs to be compiled
-            if (compileCheck && compileCheck(scope)) {
-              // compile the new DOM and link it to the current scope.
-              // NOTE: we only compile .childNodes so that
-              // we don't get into infinite loop compiling ourselves
-              $compile(iElm.find('code').contents())(scope);
-            }
           }
           else {
             ctrl.clear();
@@ -285,8 +332,8 @@ sourceDirFactory = function (dirName) {
  */
 includeDirFactory = function (dirName) {
   return [
-             '$http', '$templateCache', '$q', '$compile', '$parse',
-    function ($http,   $templateCache,   $q,   $compile,   $parse) {
+             '$http', '$templateCache', '$q',
+    function ($http,   $templateCache,   $q) {
       return {
         require: '?hljs',
         restrict: 'A',
@@ -294,14 +341,10 @@ includeDirFactory = function (dirName) {
           var srcExpr = tAttrs[dirName];
 
           return function postLink(scope, iElm, iAttrs, ctrl) {
-            var changeCounter = 0, compileCheck;
+            var changeCounter = 0;
 
             if (!ctrl) {
               return;
-            }
-
-            if (angular.isDefined(iAttrs.compile)) {
-              compileCheck = $parse(iAttrs.compile);
             }
 
             scope.$watch(srcExpr, function (src) {
@@ -352,14 +395,6 @@ includeDirFactory = function (dirName) {
 
                   code = code.replace(/^(\r\n|\r|\n)/m, '');
                   ctrl.highlight(code);
-
-                  // Check if the highlight result needs to be compiled
-                  if (compileCheck && compileCheck(scope)) {
-                    // compile the new DOM and link it to the current scope.
-                    // NOTE: we only compile .childNodes so that
-                    // we don't get into infinite loop compiling ourselves
-                    $compile(iElm.find('code').contents())(scope);
-                  }
                 });
               }
               else {
@@ -377,6 +412,8 @@ includeDirFactory = function (dirName) {
  */
 ngModule
 .directive('hljs', hljsDir)
+.directive('interpolate', interpolateDirFactory('interpolate'))
+.directive('compile', interpolateDirFactory('compile'))
 .directive('language', languageDirFactory('language'))
 .directive('source', sourceDirFactory('source'))
 .directive('include', includeDirFactory('include'));
