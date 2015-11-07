@@ -463,13 +463,25 @@ includeDirFactory = function (dirName) {
 /**
  * Add directives
  */
-ngModule
-.directive('hljs', hljsDir)
-.directive('interpolate', interpolateDirFactory('interpolate'))
-.directive('compile', interpolateDirFactory('compile'))
-.directive('language', languageDirFactory('language'))
-.directive('source', sourceDirFactory('source'))
-.directive('include', includeDirFactory('include'));
+(function (module) {
+  module.directive('hljs', hljsDir);
+
+  angular.forEach(['interpolate', 'hljsInterpolate', 'compile', 'hljsCompile'], function (name) {
+    module.directive(name, interpolateDirFactory(name));
+  });
+
+  angular.forEach(['language', 'hljsLanguage'], function (name) {
+    module.directive(name, languageDirFactory(name));
+  });
+
+  angular.forEach(['source', 'hljsSource'], function (name) {
+    module.directive(name, sourceDirFactory(name));
+  });
+
+  angular.forEach(['include', 'hljsInclude'], function (name) {
+    module.directive(name, includeDirFactory(name));
+  });
+})(ngModule);
 
   return "hljs";
 }));
