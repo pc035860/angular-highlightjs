@@ -37,9 +37,9 @@ function ExampleCtrl($scope,   $location,   $templateCache,   exampleRoutes) {
   });
 }])
 
-.controller('CompileExampleCtrl', [
-                           '$scope',
-function CompileExampleCtrl($scope) {
+.controller('InterpolateExampleCtrl', [
+                               '$scope',
+function InterpolateExampleCtrl($scope) {
 
   $scope.name = 'Robin';
   $scope.job = 'Front-end Engineer';

@@ -1,0 +1,33 @@
+<h3>hljs + hljs-interpolate</h3>
+<blockquote>
+  Make code get interpolated by <code>$interpolate</code> service after highlighting by making <code>hljs-interpolate</code> expression result truthy.
+  <br><br>
+  <span class="label label-info">Note</span>
+  <ul>
+    <li>Works with <code>hljs</code>, <code>hljs-source</code> and <code>hljs-include</code>.</li>
+  </ul>
+</blockquote>
+<hr>
+
+<div ng-controller="InterpolateExampleCtrl">
+  <div class="row">
+    <div class="col-sm-4">
+      Name <input type="text" class="form-control" ng-model="name">
+    </div>
+    <div class="col-sm-4">
+      Job <input type="text" class="form-control" ng-model="job">
+    </div>
+  </div>
+  <br>
+
+  <div hljs hljs-include="'interpolate-me'" hljs-interpolate="true"></div>
+</div>
+
+<script type="text/ng-template" id="interpolate-me">
+[
+  {
+    "name": "{{ name }}",
+    "job": "{{ job }}",
+  }
+]
+</script>

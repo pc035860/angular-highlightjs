@@ -37,18 +37,15 @@ ngModule.provider('hljsService', function () {
 /**
  * hljsCache service
  */
-ngModule.factory('hljsCache', [
-         '$cacheFactory',
-function ($cacheFactory) {
+ngModule.factory('hljsCache', function ($cacheFactory) {
   return $cacheFactory('hljsCache');
-}]);
+});
 
 /**
  * HljsCtrl controller
  */
-ngModule.controller('HljsCtrl', [
-                  'hljsCache', 'hljsService', '$interpolate', '$window', '$log',
-function HljsCtrl (hljsCache,   hljsService,   $interpolate,   $window,   $log) {
+ngModule.controller('HljsCtrl', 
+function HljsCtrl (hljsCache, hljsService, $interpolate, $window, $log) {
   var ctrl = this;
 
   var _elm = null,
@@ -236,7 +233,7 @@ function HljsCtrl (hljsCache,   hljsService,   $interpolate,   $window,   $log) 
 
     return newCode;
   }
-}]);
+});
 
 
 var hljsDir, interpolateDirFactory, languageDirFactory, sourceDirFactory, includeDirFactory;
@@ -244,7 +241,7 @@ var hljsDir, interpolateDirFactory, languageDirFactory, sourceDirFactory, includ
 /**
  * hljs directive
  */
-hljsDir = ['$parse', function ($parse) {
+hljsDir = /*@ngInject*/ function ($parse) {
   return {
     restrict: 'EA',
     controller: 'HljsCtrl',
@@ -296,13 +293,13 @@ hljsDir = ['$parse', function ($parse) {
       };
     }
   };
-}];
+};
 
 /**
  * language directive
  */
 languageDirFactory = function (dirName) {
-  return [function () {
+  return /*@ngInject*/ function () {
     return {
       require: '?hljs',
       restrict: 'A',
@@ -317,14 +314,15 @@ languageDirFactory = function (dirName) {
         });
       }
     };
-  }];
+  };
 };
 
 /**
  * interpolate directive
  */
 interpolateDirFactory = function (dirName) {
-  return [function () {
+  /*@ngInject*/
+  return function () {
     return {
       require: '?hljs',
       restrict: 'A',
@@ -339,14 +337,14 @@ interpolateDirFactory = function (dirName) {
         });
       }
     };
-  }];
+  };
 };
 
 /**
  * source directive
  */
 sourceDirFactory = function (dirName) {
-  return [function () {
+  return /*@ngInject*/ function () {
     return {
       require: '?hljs',
       restrict: 'A',
@@ -365,96 +363,106 @@ sourceDirFactory = function (dirName) {
         });
       }
     };
-  }];
+  };
 };
 
 /**
  * include directive
  */
 includeDirFactory = function (dirName) {
-  return [
-             '$http', '$templateCache', '$q',
-    function ($http,   $templateCache,   $q) {
-      return {
-        require: '?hljs',
-        restrict: 'A',
-        compile: function(tElm, tAttrs, transclude) {
-          var srcExpr = tAttrs[dirName];
+  return /*@ngInject*/ function ($http, $templateCache, $q) {
+    return {
+      require: '?hljs',
+      restrict: 'A',
+      compile: function(tElm, tAttrs, transclude) {
+        var srcExpr = tAttrs[dirName];
 
-          return function postLink(scope, iElm, iAttrs, ctrl) {
-            var changeCounter = 0;
+        return function postLink(scope, iElm, iAttrs, ctrl) {
+          var changeCounter = 0;
 
-            if (!ctrl) {
-              return;
-            }
+          if (!ctrl) {
+            return;
+          }
 
-            scope.$watch(srcExpr, function (src) {
-              var thisChangeId = ++changeCounter;
+          scope.$watch(srcExpr, function (src) {
+            var thisChangeId = ++changeCounter;
 
-              if (src && angular.isString(src)) {
-                var templateCachePromise, dfd;
+            if (src && angular.isString(src)) {
+              var templateCachePromise, dfd;
 
-                templateCachePromise = $templateCache.get(src);
-                if (!templateCachePromise) {
-                  dfd = $q.defer();
-                  $http.get(src, {
-                    cache: $templateCache,
-                    transformResponse: function(data, headersGetter) {
-                      // Return the raw string, so $http doesn't parse it
-                      // if it's json.
-                      return data;
-                    }
-                  }).success(function (code) {
-                    if (thisChangeId !== changeCounter) {
-                      return;
-                    }
-                    dfd.resolve(code);
-                  }).error(function() {
-                    if (thisChangeId === changeCounter) {
-                      ctrl.clear();
-                    }
-                    dfd.resolve();
-                  });
-                  templateCachePromise = dfd.promise;
-                }
-
-                $q.when(templateCachePromise)
-                .then(function (code) {
-                  if (!code) {
+              templateCachePromise = $templateCache.get(src);
+              if (!templateCachePromise) {
+                dfd = $q.defer();
+                $http.get(src, {
+                  cache: $templateCache,
+                  transformResponse: function(data, headersGetter) {
+                    // Return the raw string, so $http doesn't parse it
+                    // if it's json.
+                    return data;
+                  }
+                }).success(function (code) {
+                  if (thisChangeId !== changeCounter) {
                     return;
                   }
-
-                  // $templateCache from $http
-                  if (angular.isArray(code)) {
-                    // 1.1.5
-                    code = code[1];
+                  dfd.resolve(code);
+                }).error(function() {
+                  if (thisChangeId === changeCounter) {
+                    ctrl.clear();
                   }
-                  else if (angular.isObject(code)) {
-                    // 1.0.7
-                    code = code.data;
-                  }
-
-                  code = code.replace(/^(\r\n|\r|\n)/m, '');
-                  ctrl.highlight(code);
+                  dfd.resolve();
                 });
+                templateCachePromise = dfd.promise;
               }
-              else {
-                ctrl.clear();
-              }
-            });
-          };
-        }
-      };
-  }];
+
+              $q.when(templateCachePromise)
+              .then(function (code) {
+                if (!code) {
+                  return;
+                }
+
+                // $templateCache from $http
+                if (angular.isArray(code)) {
+                  // 1.1.5
+                  code = code[1];
+                }
+                else if (angular.isObject(code)) {
+                  // 1.0.7
+                  code = code.data;
+                }
+
+                code = code.replace(/^(\r\n|\r|\n)/m, '');
+                ctrl.highlight(code);
+              });
+            }
+            else {
+              ctrl.clear();
+            }
+          });
+        };
+      }
+    };
+  };
 };
 
 /**
  * Add directives
  */
-ngModule
-.directive('hljs', hljsDir)
-.directive('interpolate', interpolateDirFactory('interpolate'))
-.directive('compile', interpolateDirFactory('compile'))
-.directive('language', languageDirFactory('language'))
-.directive('source', sourceDirFactory('source'))
-.directive('include', includeDirFactory('include'));
+(function (module) {
+  module.directive('hljs', hljsDir);
+
+  angular.forEach(['interpolate', 'hljsInterpolate', 'compile', 'hljsCompile'], function (name) {
+    module.directive(name, interpolateDirFactory(name));
+  });
+
+  angular.forEach(['language', 'hljsLanguage'], function (name) {
+    module.directive(name, languageDirFactory(name));
+  });
+
+  angular.forEach(['source', 'hljsSource'], function (name) {
+    module.directive(name, sourceDirFactory(name));
+  });
+
+  angular.forEach(['include', 'hljsInclude'], function (name) {
+    module.directive(name, includeDirFactory(name));
+  });
+})(ngModule);

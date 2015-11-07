@@ -52,8 +52,8 @@ module.exports = function(grunt) {
                 '}));'
       },
       build: {
-        src: '<%= dir.src %>/<%= pkg.name %>.js',
-        dest: '<%= dir.build %>/<%= pkg.name %>.js'
+        src: '<%= ngAnnotate.build.dest %>',
+        dest: '<%= ngAnnotate.build.dest %>'
       }
     },
     uglify: {
@@ -63,7 +63,7 @@ module.exports = function(grunt) {
         banner: '<%= meta.banner %>\n'
       },
       build: {
-        src: '<%= dir.build %>/<%= pkg.name %>.js',
+        src: '<%= concat.build.dest %>',
         dest: '<%= dir.build %>/<%= pkg.name %>.min.js'
       }
     },
@@ -93,6 +93,12 @@ module.exports = function(grunt) {
           keepalive: true
         }
       }
+    },
+    ngAnnotate: {
+      build: {
+        src: '<%= dir.src %>/<%= pkg.name %>.js',
+        dest: '<%= dir.build %>/<%= pkg.name %>.js'
+      }
     }
   });
 
@@ -102,10 +108,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-ng-annotate');
 
   grunt.registerTask('default', [
     'jshint:beforeuglify',
-    'concat:build', 'uglify:build', 'copy:build'
+    'ngAnnotate:build', 'concat:build', 'uglify:build', 'copy:build'
   ]);
 };
 
