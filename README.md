@@ -17,7 +17,8 @@ AngularJS directive for syntax highlighting with [highlight.js](http://highlight
 
 Follow the instructions [here](http://softwaremaniacs.org/soft/highlight/en/download/) to setup highlight.js.
 
-Using a prebuilt version of highlight.js hosted at Yandex here.
+Using a prebuilt version of highlight.js hosted at cdnjs here.
+
 ```html
 <!-- personal preference: github theme -->
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
