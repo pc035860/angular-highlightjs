@@ -88,6 +88,11 @@ The directive automatically escapes its content HTML entities by default. Can be
 </div>
 ```
 
+**Frequently Asked Question**
+
+Since the code inside `hljs` will be parsed by browser even before AngularJS bootstraped, it sometimes demonstrates strange highlight result when the code you put inside `hljs` have HTML-tag-like syntax (`<blah>`).  
+To deal with the issue, use `hljs-no-escape` option with manually escaped code or switch to `hljs-source` or `hljs-include` for highlighting.
+
 #### hljs-source (optional)
 Type: `expression`
 Default: `undefined`
