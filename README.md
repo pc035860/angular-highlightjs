@@ -39,7 +39,7 @@ angular.module('myApp', ['hljs']);
 ## Install with npm
 
 ```sh
-npm install highlight.js
+npm install highlightjs
 npm install angular-highlightjs
 ```
 
