@@ -1,6 +1,6 @@
 {
   "name": "angular-highlightjs",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "AngularJS directive for syntax highlighting with highlight.js",
   "main": "./build/angular-highlightjs.js",
   "directories": {},
@@ -32,5 +32,8 @@
     "grunt-contrib-watch": "^0.6.0",
     "grunt-ng-annotate": "^1.0.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "angular": "^1.0.1",
+    "highlight.js": ">7.0.0"
+  }
 }
