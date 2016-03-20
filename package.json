@@ -32,5 +32,8 @@
     "grunt-contrib-watch": "^0.6.0",
     "grunt-ng-annotate": "^1.0.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "angular": "^1.0.1",
+    "highlight.js": ">7.0.0"
+  }
 }

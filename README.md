@@ -9,7 +9,7 @@ AngularJS directive for syntax highlighting with [highlight.js](http://highlight
 
 ## Requirements
 
-* Highlight.js (.js & .css)
+* Highlight.js v7.0.0+
 * AngularJS v1.0.1+
 
 
@@ -39,7 +39,6 @@ angular.module('myApp', ['hljs']);
 ## Install with npm
 
 ```sh
-npm install highlight.js
 npm install angular-highlightjs
 ```
 
