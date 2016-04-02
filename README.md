@@ -82,8 +82,7 @@ The directive automatically escapes its content HTML entities by default. Can be
 <!-- hljs end -->
 
 <!-- Will get the same result as above -->
-<div
-    hljs
+<div hljs
     hljs-no-escape>
 &lt;!-- put your codes here --&gt;
 </div>
@@ -114,8 +113,7 @@ Dynamically changed content.
 <div ng-show="subSource">
   <br>
   <!-- hljs connected with $scope.subSource -->
-  <div
-    hljs
+  <div hljs
     hljs-source="subSource"></div>
 </div>
 ```
@@ -123,8 +121,7 @@ Dynamically changed content.
 The expression. Beware of single-quotes.
 ```html
 <!-- hljs connected with independent string -->
-<div
-    hljs
+<div hljs
     hljs-source="'<html><head><body></body></head></html>'"></div>
 ```
 
@@ -139,16 +136,14 @@ Works as the built-in `ng-include` directive, utilizes `$templateCache` and `$ht
 From `text/ng-template` script `localOne`. Beware of single-quotes in the expression.
 ```html
 <!-- load text/ng-template named 'localOne' -->
-<div
-    hljs
+<div hljs
     hljs-include="'localOne'"></div>
 ```
 
 From `partials/lang-perl` XHR. Again, beware of single-quotes.
 ```html
 <!-- load "partials/lang-perl" -->
-<div
-    hljs
+<div hljs
     hljs-include="'partials/lang-perl'"></div>
 ```
 
@@ -162,13 +157,11 @@ Tells the highlight.js which language syntax should be used to highlight the cod
 
 ```html
 <!-- PHP codes highlight with language detection -->
-<div 
-    hljs 
+<div hljs 
     hljs-include="'partials/lang-php'"></div>
 
 <!-- PHP codes highlight with specified language: perl -->
-<div 
-    hljs 
+<div hljs 
     hljs-include="'partials/lang-php'"
     hljs-language="perl"></div>
 ```
@@ -185,8 +178,7 @@ The attribute works with all methods of highlighting: `hljs`, `hljs-source` and 
 [Live example](http://pc035860.github.io/angular-highlightjs/example/#/hljs-compile)
 
 ```html
-<div
-    hljs
+<div hljs
     hljs-include="'interpolate-me'"
     hljs-interpolate="true"></div>
 ```
