@@ -1,4 +1,4 @@
-# angular-highlightjs [![npm](https://img.shields.io/npm/v/angular-highlightjs.svg)](https://www.npmjs.com/package/angular-easyfb) [![Bower](https://img.shields.io/bower/v/angular-highlightjs.svg)](http://bower.io/search/?q=angular-easyfb)
+# angular-highlightjs [![npm](https://img.shields.io/npm/v/angular-highlightjs.svg)](https://www.npmjs.com/package/angular-highlightjs) [![Bower](https://img.shields.io/bower/v/angular-highlightjs.svg)](http://bower.io/search/?q=angular-highlightjs)
 
 AngularJS directive for syntax highlighting with [highlight.js](http://highlightjs.org/).
 
