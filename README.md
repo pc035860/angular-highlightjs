@@ -1,4 +1,4 @@
-# angular-highlightjs
+# angular-highlightjs [![npm](https://img.shields.io/npm/v/angular-highlightjs.svg)](https://www.npmjs.com/package/angular-easyfb) [![Bower](https://img.shields.io/bower/v/angular-highlightjs.svg)](http://bower.io/search/?q=angular-easyfb)
 
 AngularJS directive for syntax highlighting with [highlight.js](http://highlightjs.org/).
 
@@ -82,7 +82,9 @@ The directive automatically escapes its content HTML entities by default. Can be
 <!-- hljs end -->
 
 <!-- Will get the same result as above -->
-<div hljs hljs-no-escape>
+<div
+    hljs
+    hljs-no-escape>
 &lt;!-- put your codes here --&gt;
 </div>
 ```
@@ -104,20 +106,26 @@ Dynamically changed content.
 ```html
 <!-- buttons for put/clear $scope.subSource content -->
 <button class="btn btn-primary show-source" 
-        ng-click="toggleSource('subSource')" ng-show="!subSource">put $scope.subSource</button>
+        ng-click="toggleSource('subSource')"
+        ng-show="!subSource">put $scope.subSource</button>
 <button class="btn btn-primary show-source" 
-        ng-click="toggleSource('subSource')" ng-show="subSource">clear $scope.subSource</button>
+        ng-click="toggleSource('subSource')"
+        ng-show="subSource">clear $scope.subSource</button>
 <div ng-show="subSource">
   <br>
   <!-- hljs connected with $scope.subSource -->
-  <div hljs hljs-source="subSource"></div>
+  <div
+    hljs
+    hljs-source="subSource"></div>
 </div>
 ```
 
 The expression. Beware of single-quotes.
 ```html
 <!-- hljs connected with independent string -->
-<div hljs hljs-source="'<html><head><body></body></head></html>'"></div>
+<div
+    hljs
+    hljs-source="'<html><head><body></body></head></html>'"></div>
 ```
 
 #### hljs-include (optional)
@@ -131,13 +139,17 @@ Works as the built-in `ng-include` directive, utilizes `$templateCache` and `$ht
 From `text/ng-template` script `localOne`. Beware of single-quotes in the expression.
 ```html
 <!-- load text/ng-template named 'localOne' -->
-<div hljs hljs-include="'localOne'"></div>
+<div
+    hljs
+    hljs-include="'localOne'"></div>
 ```
 
 From `partials/lang-perl` XHR. Again, beware of single-quotes.
 ```html
 <!-- load "partials/lang-perl" -->
-<div hljs hljs-include="'partials/lang-perl'"></div>
+<div
+    hljs
+    hljs-include="'partials/lang-perl'"></div>
 ```
 
 #### hljs-language (optional)
@@ -150,10 +162,15 @@ Tells the highlight.js which language syntax should be used to highlight the cod
 
 ```html
 <!-- PHP codes highlight with language detection -->
-<div hljs hljs-include="'partials/lang-php'"></div>
+<div 
+    hljs 
+    hljs-include="'partials/lang-php'"></div>
 
 <!-- PHP codes highlight with specified language: perl -->
-<div hljs hljs-include="'partials/lang-php'" hljs-language="perl"></div>
+<div 
+    hljs 
+    hljs-include="'partials/lang-php'"
+    hljs-language="perl"></div>
 ```
 
 
@@ -168,7 +185,10 @@ The attribute works with all methods of highlighting: `hljs`, `hljs-source` and 
 [Live example](http://pc035860.github.io/angular-highlightjs/example/#/hljs-compile)
 
 ```html
-<div hljs hljs-include="'interpolate-me'" hljs-interpolate="true"></div>
+<div
+    hljs
+    hljs-include="'interpolate-me'"
+    hljs-interpolate="true"></div>
 ```
 
 ### Happy highlighting!!!
