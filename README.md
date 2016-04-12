@@ -1,5 +1,7 @@
 # angular-highlightjs [![npm](https://img.shields.io/npm/v/angular-highlightjs.svg)](https://www.npmjs.com/package/angular-highlightjs) [![Bower](https://img.shields.io/bower/v/angular-highlightjs.svg)](http://bower.io/search/?q=angular-highlightjs)
 
+[![Join the chat at https://gitter.im/pc035860/angular-highlightjs](https://badges.gitter.im/pc035860/angular-highlightjs.svg)](https://gitter.im/pc035860/angular-highlightjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 AngularJS directive for syntax highlighting with [highlight.js](http://highlightjs.org/).
 
 #### Demos
