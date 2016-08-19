@@ -75,8 +75,8 @@ ngModule.factory('hljsCache', function ($cacheFactory) {
 /**
  * HljsCtrl controller
  */
-ngModule.controller('HljsCtrl', 
-function HljsCtrl (hljsCache, hljsService, $interpolate, $window, $log) {
+ngModule.controller('HljsCtrl',
+function HljsCtrl (hljsCache, hljsService, $interpolate, $window) {
   var ctrl = this;
 
   var _elm = null,
@@ -165,6 +165,7 @@ function HljsCtrl (hljsCache, hljsService, $interpolate, $window, $log) {
           _elm.html(newVal);
         }
       });
+      _interpolateScope.$apply();
       _elm.html(interpolateFn(_interpolateScope));
     }
     else {
