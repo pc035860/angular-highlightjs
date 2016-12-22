@@ -340,7 +340,7 @@ languageDirFactory = function (dirName) {
       link: function (scope, iElm, iAttrs, ctrl) {
         if (!ctrl) {
           return;
-        }      
+        }
         iAttrs.$observe(dirName, function (lang) {
           if (angular.isDefined(lang)) {
             ctrl.setLanguage(lang);
@@ -434,12 +434,12 @@ includeDirFactory = function (dirName) {
                     // if it's json.
                     return data;
                   }
-                }).success(function (code) {
+                }).then(function (code) {
                   if (thisChangeId !== changeCounter) {
                     return;
                   }
                   dfd.resolve(code);
-                }).error(function() {
+                }, function() {
                   if (thisChangeId === changeCounter) {
                     ctrl.clear();
                   }
