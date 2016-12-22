@@ -1,4 +1,4 @@
-/*global angular, hljs*/
+/*global angular, hljs, window*/
 
 /**
  * returns a function to transform attrs to supported ones
@@ -59,8 +59,8 @@ ngModule.provider('hljsService', function () {
       return angular.copy(_hljsOptions);
     },
     $get: function () {
-      (hljs.configure || angular.noop)(_hljsOptions);
-      return hljs;
+      (window.hljs.configure || angular.noop)(_hljsOptions);
+      return window.hljs;
     }
   };
 });
@@ -340,7 +340,7 @@ languageDirFactory = function (dirName) {
       link: function (scope, iElm, iAttrs, ctrl) {
         if (!ctrl) {
           return;
-        }      
+        }
         iAttrs.$observe(dirName, function (lang) {
           if (angular.isDefined(lang)) {
             ctrl.setLanguage(lang);

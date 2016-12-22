@@ -1,6 +1,6 @@
 /*! angular-highlightjs
 version: 0.7.1
-build date: 2017-02-28
+build date: 2017-05-17
 author: Chih-Hsuan Fan
 https://github.com/pc035860/angular-highlightjs.git */
 
@@ -14,7 +14,7 @@ https://github.com/pc035860/angular-highlightjs.git */
   }
 }(this, function (angular, hljs) {
 
-/*global angular, hljs*/
+/*global angular, hljs, window*/
 
 /**
  * returns a function to transform attrs to supported ones
@@ -75,8 +75,8 @@ ngModule.provider('hljsService', function () {
       return angular.copy(_hljsOptions);
     },
     $get: function () {
-      (hljs.configure || angular.noop)(_hljsOptions);
-      return hljs;
+      (window.hljs.configure || angular.noop)(_hljsOptions);
+      return window.hljs;
     }
   };
 });
@@ -356,7 +356,7 @@ languageDirFactory = function (dirName) {
       link: function (scope, iElm, iAttrs, ctrl) {
         if (!ctrl) {
           return;
-        }      
+        }
         iAttrs.$observe(dirName, function (lang) {
           if (angular.isDefined(lang)) {
             ctrl.setLanguage(lang);
