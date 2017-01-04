@@ -1,6 +1,6 @@
 /*! angular-highlightjs
-version: 0.6.2
-build date: 2016-08-19
+version: 0.6.3
+build date: 2017-01-04
 author: Chih-Hsuan Fan
 https://github.com/pc035860/angular-highlightjs.git */
 
@@ -450,12 +450,12 @@ includeDirFactory = function (dirName) {
                     // if it's json.
                     return data;
                   }
-                }).success(function (code) {
+                }).then(function (code) {
                   if (thisChangeId !== changeCounter) {
                     return;
                   }
                   dfd.resolve(code);
-                }).error(function() {
+                }).catch(function() {
                   if (thisChangeId === changeCounter) {
                     ctrl.clear();
                   }
@@ -516,6 +516,7 @@ includeDirFactory = function (dirName) {
     module.directive(name, includeDirFactory(name));
   });
 })(ngModule);
+
 
   return "hljs";
 }));
