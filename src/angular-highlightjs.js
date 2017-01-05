@@ -434,12 +434,12 @@ includeDirFactory = function (dirName) {
                     // if it's json.
                     return data;
                   }
-                }).success(function (code) {
+                }).then(function (code) {
                   if (thisChangeId !== changeCounter) {
                     return;
                   }
                   dfd.resolve(code);
-                }).error(function() {
+                }).catch(function() {
                   if (thisChangeId === changeCounter) {
                     ctrl.clear();
                   }
