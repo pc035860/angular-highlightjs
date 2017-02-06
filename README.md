@@ -28,7 +28,7 @@ Using a prebuilt version of highlight.js hosted at cdnjs here.
 Include `angular-highlightjs` module script with AngularJS script on your page.
 ```html
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
-<script src="http://pc035860.github.io/angular-highlightjs/angular-highlightjs.min.js"></script>
+<script src="https://pc035860.github.io/angular-highlightjs/angular-highlightjs.min.js"></script>
 ```
 
 Add `hljs` to your app module's dependency.
