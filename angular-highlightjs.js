@@ -1,6 +1,6 @@
 /*! angular-highlightjs
-version: 0.6.3
-build date: 2017-01-04
+version: 0.7.0
+build date: 2017-02-19
 author: Chih-Hsuan Fan
 https://github.com/pc035860/angular-highlightjs.git */
 
@@ -296,8 +296,8 @@ hljsDir = /*@ngInject*/ ["$parse", function ($parse) {
     compile: function(tElm, tAttrs, transclude) {
       // get static code
       // strip the starting "new line" character
-      var staticHTML = tElm[0].innerHTML.replace(/^(\r\n|\r|\n)/m, ''),
-          staticText = tElm[0].textContent.replace(/^(\r\n|\r|\n)/m, '');
+      var staticHTML = tElm[0].innerHTML.replace(/^(\r\n|\r|\n)/, ''),
+          staticText = tElm[0].textContent.replace(/^(\r\n|\r|\n)/, '');
 
       // put template
       tElm.html('<pre><code class="hljs"></code></pre>');
