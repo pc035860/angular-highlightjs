@@ -280,8 +280,8 @@ hljsDir = /*@ngInject*/ function ($parse) {
     compile: function(tElm, tAttrs, transclude) {
       // get static code
       // strip the starting "new line" character
-      var staticHTML = tElm[0].innerHTML.replace(/^(\r\n|\r|\n)/m, ''),
-          staticText = tElm[0].textContent.replace(/^(\r\n|\r|\n)/m, '');
+      var staticHTML = tElm[0].innerHTML.replace(/^(\r\n|\r|\n)/, ''),
+          staticText = tElm[0].textContent.replace(/^(\r\n|\r|\n)/, '');
 
       // put template
       tElm.html('<pre><code class="hljs"></code></pre>');
