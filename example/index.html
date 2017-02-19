@@ -5,14 +5,14 @@
   <title>angular-highlightjs examples</title>
 
   <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.0/css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
+  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
   <link rel="stylesheet/less" type="text/css" href="styles.less" />
 
   <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.5/less.min.js"></script>
 
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-route.min.js"></script>
   <script src="../build/angular-highlightjs.js"></script>
 
   <script src="scripts/app.js"></script>
@@ -30,7 +30,7 @@
 
       <ul class="nav navbar-nav">
         <li ng-repeat="link in linkList" ng-class="{'active': path == link}">
-          <a ng-href="#{{ link }}" ng-bind="getNavName(link)"></a>
+          <a ng-href="#!{{ link }}" ng-bind="getNavName(link)"></a>
         </li>
       </ul>
       <button class="btn btn-primary show-source" ng-click="toggleSource()" ng-show="!source">show source</button>
