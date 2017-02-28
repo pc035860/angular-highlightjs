@@ -464,7 +464,7 @@ includeDirFactory = function (dirName) {
                   code = code.data;
                 }
 
-                code = code.replace(/^(\r\n|\r|\n)/m, '');
+                code = code.replace(/^(\r\n|\r|\n)/, '');
                 ctrl.highlight(code);
               });
             }
