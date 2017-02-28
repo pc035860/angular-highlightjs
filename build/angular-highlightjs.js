@@ -1,6 +1,6 @@
 /*! angular-highlightjs
-version: 0.7.0
-build date: 2017-02-19
+version: 0.7.1
+build date: 2017-02-28
 author: Chih-Hsuan Fan
 https://github.com/pc035860/angular-highlightjs.git */
 
@@ -480,7 +480,7 @@ includeDirFactory = function (dirName) {
                   code = code.data;
                 }
 
-                code = code.replace(/^(\r\n|\r|\n)/m, '');
+                code = code.replace(/^(\r\n|\r|\n)/, '');
                 ctrl.highlight(code);
               });
             }
